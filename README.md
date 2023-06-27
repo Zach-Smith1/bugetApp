@@ -1,6 +1,4 @@
-# gcp
-
-Empty project.
+# hn3
 
 ## Building and running on localhost
 
