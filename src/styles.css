@@ -1,0 +1,96 @@
+body {
+  background-color: #dededef3;
+}
+#nav {
+  font-size: 100%;
+  display: block;
+  width: 100%;
+  position: absolute;
+  background-color: rgb(196, 33, 33);
+  overflow: hidden;
+  color: white;
+  display: block;
+  max-height: 1.5em;
+}
+#loading {
+  font-size: xx-large;
+  line-height: 1000px;
+}
+#login {
+  float: right;
+  margin-right: 2%;
+}
+.stories {
+  margin-left: 30%;
+}
+.storyBlocks {
+  width: max-content;
+  padding: 1px;
+  margin: 5px 1px 1px 5px;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+.storyBlocks:hover {
+  padding: 1%;
+  font-size: large;
+  margin: 6px 1px 1px 6px;
+}
+#titleLink {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  transition-duration: .5s;
+}
+#titleLink:hover {
+  color: blue;
+  font-size: large;
+}
+#arrow {
+  text-shadow: 0 0 0 rgb(76, 131, 241);
+  color: transparent;
+  text-decoration: none;
+  transition-duration: .5s;
+}
+#arrow:hover {
+  text-shadow: 0 0 0 rgb(0, 85, 255);
+  color: transparent;
+  text-decoration: none
+}
+a {
+  cursor: pointer;
+}
+a:hover {
+  text-decoration: underline;
+}
+#home {
+  text-decoration: none;
+}
+.construction {
+  margin-top: 20%;
+  font-size: x-large;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.buttonBlock {
+  display: flex;
+  justify-content: center;
+  width: 95%;
+}
+button {
+  max-width: 10%;
+  cursor: pointer;
+  border-radius: 10%;
+  margin: 2%;
+  background-image: linear-gradient(to right, #f6d365 0%, #f95c31 59%, #f6d365 100%);
+  transition-duration: 1s;
+  flex: 1 1 auto;
+  padding: 20px;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 10px;
+}
+button:hover {
+  background-position: right center;
+}
