@@ -1,49 +1,5 @@
-body {
-  background-color: #dededef3;
-}
-#nav {
-  font-size: 100%;
-  display: block;
-  width: 100%;
-  position: absolute;
-  background-color: rgb(196, 33, 33);
-  overflow: hidden;
-  color: white;
-  display: block;
-  max-height: 1.5em;
-}
-#loading {
-  font-size: xx-large;
-  line-height: 1000px;
-}
-#login {
-  float: right;
-  margin-right: 2%;
-}
-.stories {
-  margin-left: 30%;
-}
-.storyBlocks {
-  width: max-content;
-  padding: 1px;
-  margin: 5px 1px 1px 5px;
-  transition-duration: 1s;
-  transition-timing-function: ease-in-out;
-}
-.storyBlocks:hover {
-  padding: 1%;
-  font-size: large;
-  margin: 6px 1px 1px 6px;
-}
-#titleLink {
-  color: rgb(0, 0, 0);
-  text-decoration: none;
-  transition-duration: .5s;
-}
-#titleLink:hover {
-  color: blue;
-  font-size: large;
-}
+/*
+This is all code from the Hacker News Homepage
 #arrow {
   text-shadow: 0 0 0 rgb(76, 131, 241);
   color: transparent;
@@ -60,17 +16,10 @@ a {
 }
 a:hover {
   text-decoration: underline;
-}
-#home {
-  text-decoration: none;
-}
-.construction {
-  margin-top: 20%;
-  font-size: x-large;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+} */
+body {
+  background-color: white;
+  margin: 0px;
 }
 .buttonBlock {
   display: flex;
@@ -78,7 +27,7 @@ a:hover {
   width: 95%;
 }
 button {
-  max-width: 10%;
+  max-width: 50%;
   cursor: pointer;
   border-radius: 10%;
   margin: 2%;
@@ -93,4 +42,154 @@ button {
 }
 button:hover {
   background-position: right center;
+}
+.csv-html-table table {
+  border-radius: 5px;
+  border-color: black;
+}
+.category {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row: 3;
+  grid-column: 1;
+}
+#categoryLabel {
+  position: absolute;
+  left: 15%;
+}
+.categoryWheel {
+  position: relative;
+}
+.downloadButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row: 3;
+  grid-column: 3;
+}
+.donut {
+  grid-row: 1;
+  grid-column: 1;
+  text-align: center;
+  font-family:'Times New Roman', Times, serif;
+  font-size: x-large;
+}
+.drag-drop-input {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+  border-radius: 1em;
+  border-width: 10px;
+  border-style: dashed;
+  border-color: #b6b6b6;
+  background-color: rgb(217, 217, 217);
+  position: relative;
+  transition-duration: .75s;
+}
+
+.drag-drop-input:hover {
+  background-color: rgb(106, 180, 87);
+  border-color: rgb(0, 141, 30);
+  color: #000; /* Fallback for older browsers */
+  color: rgba(0, 0, 0, 0);
+  border-radius: 10em;
+  border-width: 10px;
+  border-style: solid;
+}
+.dragMessage {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 33% 33% 33%;
+  position: absolute;
+  bottom: 0px;
+  width: 100vw;
+  height: 95vh;
+}
+.inputButton {
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  position: absolute;
+  left: 0px;
+  z-index: 1;
+}
+.myDonut {
+  grid-row: 2;
+  grid-column: 1;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: x-large;
+}
+#nav {
+  font-size: 100%;
+  display: block;
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  background-color: rgb(0, 141, 30);
+  /* overflow: hidden; */
+  color: white;
+  max-height: 1.5em;
+}
+.name {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  grid-row: 1;
+  grid-column: 3;
+}
+.nameInput {
+  font-size: xx-large;
+  text-align: center;
+  border-width: 0px;
+  width: -webkit-fill-available
+}
+.table {
+  border-color: "black";
+  border-width: 2px;
+  background-color: "white";
+}
+#titleLink {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  transition-duration: .5s;
+}
+#titleLink:hover {
+  color: blue;
+  font-size: large;
+}
+.totals {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  grid-row: 2;
+  grid-column: 2;
+}
+.table {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row: 3;
+  grid-column: 2;
+}
+.tableDiv {
+  position: absolute;
+  top: 0px;
+}
+.specifics {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row: 2;
+  grid-column: 1;
 }
