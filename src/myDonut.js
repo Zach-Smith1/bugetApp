@@ -6,10 +6,10 @@ import Chart from 'react-apexcharts'
     }
 
   const MyDonut = ({ series}) => {
-
+    console.log(series)
     return (
       <div className="myDonut">
-        <Chart options={options} series={series} type="donut" width="380" />
+        <Chart options={options} series={series} type="donut" width="480" />
       </div>
     );
   }

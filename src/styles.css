@@ -52,8 +52,8 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-row: 3;
-  grid-column: 1;
+  grid-row: 2;
+  grid-column: 2;
 }
 #categoryLabel {
   position: absolute;
@@ -61,6 +61,14 @@ button:hover {
 }
 .categoryWheel {
   position: relative;
+}
+.custom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  grid-row: 3;
+  grid-column: 1;
+  margin: 1em;
 }
 .downloadButton {
   display: flex;
@@ -88,7 +96,6 @@ button:hover {
   position: relative;
   transition-duration: .75s;
 }
-
 .drag-drop-input:hover {
   background-color: rgb(106, 180, 87);
   border-color: rgb(0, 141, 30);
@@ -172,7 +179,7 @@ button:hover {
   justify-content: center;
   align-items: flex-end;
   grid-row: 2;
-  grid-column: 2;
+  grid-column: 3;
 }
 .table {
   position: relative;

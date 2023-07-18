@@ -18,7 +18,10 @@ class App extends React.Component {
       categories: null,
       dragging: false,
       show: 'block',
-      series: [1,2,3,4,5,6,7,8]
+      series: [1,2,3,0,5,6,7,8],
+      income: 0,
+      housing: 0,
+      savings: 0
     }
   }
 
@@ -131,6 +134,7 @@ class App extends React.Component {
       let air = Math.floor(totals[1].Airfare) || 0;
       series[1] = Math.floor(totals[1].Insurance) || 0;
       series[2] = Math.floor(totals[1].Dining) || 0;
+      series[3] = 0;
       series[4] = internet + totals[1]['Phone/Cable'];
       series[5] = gas + air;
       series[6] = Math.floor(totals[1]['Health Care']) || 0;
@@ -139,6 +143,15 @@ class App extends React.Component {
         series: series,
         download: totals[0],
         object: totals[1]
+      })
+    }
+    if (prevState.income !== this.state.income || prevState.housing !== this.state.housing) {
+      let series = this.state.series;
+      series[0] = this.state.housing > 0 ? Number(this.state.housing) : 0;
+      let total = series.reduce((a,b) => a + b);
+      series[3] = (this.state.income - total) > 0 ? (this.state.income - total) : 0;
+      this.setState({
+        series: series
       })
     }
     // this code is so that the name input box doesn't disappear if you delete all the text
@@ -192,26 +205,55 @@ class App extends React.Component {
     this.fileReaderCode(e.target.files)
   }
 
+  inputChange = (e) => {
+    e.preventDefault();
+    let state = e.target.name;
+    let val = e.target.value;
+    this.setState({
+      [state]: val
+    })
+    console.log(state, this.state[state])
+  }
+
   nameChange = (e) => {
     e.preventDefault();
-    let val = e.target.value + '';
+    let val = e.target.value;
     this.setState({
       name: val
     })
   }
 
+  incomeChange = (e) => {
+    e.preventDefault();
+    let val = e.target.value
+    this.setState({
+      income: val
+    })
+  }
+
+
   render() {
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
-    let [name, totals, fine, downloadButton, category, specifics, table, baseGraph, myGraph] = Array(9).fill(null);
+    let [name, totals, fine, downloadButton, category, specifics, table, baseGraph, myGraph, custom] = Array(10).fill(null);
     if (this.state.name) {
       // name = name of imported file
       name = <div>
         Spending Data Generated from:<br/>
-        <input className='nameInput' type='text' placeholder='a' value={this.state.name} onChange={this.nameChange}/>
+        <input className='nameInput' name='name' type='text' placeholder='a' value={this.state.name} onChange={this.inputChange}/>
+      </div>
+      custom = <div>
+        <div>
+          <input className='incomeInput' name='income' type='number' placeholder='3000' value={this.state.income} onChange={this.inputChange}/>
+          <label id='incomeLabel' htmlFor='income'>&emsp;Update Income</label>
+        </div>
+        <div>
+          <input className='housingInput' name='housing' type='number' placeholder='1500' value={this.state.housing} onChange={this.inputChange}/>
+          <label id='housingLabel' htmlFor='housing'>&emsp;Update Housing Cost</label>
+        </div>
       </div>
     }
     if (this.state.download) {
-      baseGraph = <div className='donut'>Suggested Budget<br/><Donut/></div>
+      baseGraph = <div className='donut'>Suggested Budget<br/><Donut version='1'/></div>
       myGraph = <div className='myDonut'>My Spending<br/><MyDonut series={this.state.series} key={this.state.series.join('_')}/></div>
       // Housing, Insurance, Food, Savings, Utilities, Transportation, Needs, Wants
       let list = Object.keys(this.state.object);
@@ -259,6 +301,7 @@ class App extends React.Component {
         {myGraph}
         <div className='name'>{name}</div>
         <div className='totals'>{totals}</div>
+        <div className='custom'>{custom}</div>
         <div className='specifics'>{specifics}</div>
         <div className='downloadButton'>{downloadButton}</div>
         <div className='category'>{category}</div>

@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import Chart from 'react-apexcharts'
 
-class Donut extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      options: {
-        labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants'],
-        plotoptions: {
+  const plotoptions = {
           donut: {
             size: '65%',
             background: 'transparent',
@@ -54,19 +46,19 @@ class Donut extends React.Component {
             }
           }
         }
-      },
-      series: [30, 10, 15, 10, 5, 10, 15, 5],
-    }
-  }
 
-  render() {
+    const Donut = ({ version }) => {
+    const options = version === '1' ? {
+      labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants']
+    } : {labels: ['Living Expenses', 'Debt/Savings', 'Wants/Fun']}
+    const series = version === '1' ? [30,10,15,10,5,10,15,5] : [70,20,10]
+
 
     return (
       <div className="donut">
-        <Chart options={this.state.options} series={this.state.series} type="donut" width="380" />
+        <Chart options={options} series={series} type="donut" width="380" />
       </div>
     );
   }
-}
 
 export default Donut;
