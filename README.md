@@ -28,4 +28,5 @@ Open the file `dist/index.html` in your browser
 
 This is a budget app actively under development with big plans for the future!
 
+P.S. The are dependency issues with react-csv-to-table
 
