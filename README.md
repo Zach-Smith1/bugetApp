@@ -1,4 +1,4 @@
-# hn3
+# BudgetApp (needs better name)
 
 ## Building and running on localhost
 
@@ -20,15 +20,12 @@ To create a development build:
 npm run dev
 ```
 
-## Running
+## Running Locally
 
 Open the file `dist/index.html` in your browser
 
 ## Note
 
-This build is limited to a redesigned front page of Hacker News, there are no login, post, comment, etc. capabilities.
-Links to articles can be followed, all other Hacker News links are for show and will redirect to an "under construction" page.
-
-Thanks!
+This is a budget app actively under development with big plans for the future!
 
 
