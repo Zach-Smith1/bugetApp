@@ -112,7 +112,7 @@ export function fineGrainedBreakdown(file) {
     if (name.slice(0,8).toLowerCase() === 'mcdonald') {
       name = 'MCDONALDS '
     }
-    if (name.slice(0,6).toLowerCase() === 'GOOGLE') {
+    if (name.slice(0,6) === 'GOOGLE') {
       name = 'GOOGLE '
     }
 

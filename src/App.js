@@ -22,7 +22,6 @@ class App extends React.Component {
     }
   }
 
-
   addCategory = (e) => {
     e.preventDefault();
     let val = e.target.value
@@ -136,11 +135,8 @@ class App extends React.Component {
       series[5] = gas + air;
       series[6] = Math.floor(totals[1]['Health Care']) || 0;
       series[7] = Math.floor(totals[1].Merchandise) || 0;
-      console.log('series1', series[1])
       this.setState({
-        series: series
-      })
-      this.setState({
+        series: series,
         download: totals[0],
         object: totals[1]
       })
@@ -216,7 +212,7 @@ class App extends React.Component {
     }
     if (this.state.download) {
       baseGraph = <div className='donut'>Suggested Budget<br/><Donut/></div>
-      myGraph = <div className='myDonut'>My Spending<br/><MyDonut series={this.state.series}/></div>
+      myGraph = <div className='myDonut'>My Spending<br/><MyDonut series={this.state.series} key={this.state.series.join('_')}/></div>
       // Housing, Insurance, Food, Savings, Utilities, Transportation, Needs, Wants
       let list = Object.keys(this.state.object);
       let all = [<option key='base' value={null}>All</option>];
