@@ -52,7 +52,7 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 2;
 }
 #categoryLabel {
@@ -66,7 +66,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  grid-row: 3;
+  grid-row: 4;
   grid-column: 1;
   margin: 1em;
 }
@@ -74,11 +74,11 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-row: 3;
+  grid-row: 4;
   grid-column: 3;
 }
 .donut {
-  grid-row: 1;
+  grid-row: 2;
   grid-column: 1;
   text-align: center;
   font-family:'Times New Roman', Times, serif;
@@ -86,7 +86,7 @@ button:hover {
 }
 .drag-drop-input {
   grid-column: 2;
-  grid-row: 1;
+  grid-row: 2;
   text-align: center;
   border-radius: 1em;
   border-width: 10px;
@@ -113,7 +113,7 @@ button:hover {
 .grid {
   display: grid;
   grid-template-columns: 33% 33% 33%;
-  grid-template-rows: 33% 33% 33%;
+  grid-template-rows: 8% 33% 33% 33%;
   position: absolute;
   bottom: 0px;
   width: 100vw;
@@ -128,22 +128,21 @@ button:hover {
   z-index: 1;
 }
 .myDonut {
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 1;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
   font-size: x-large;
 }
 #nav {
-  font-size: 100%;
-  display: block;
+  top: 1px;
+  grid-row: 1;
+  grid-column: 2;
+  font-size: xx-large;
   text-align: center;
-  width: 100%;
-  position: absolute;
-  top: 0px;
-  background-color: rgb(0, 141, 30);
+  font-family:'Times New Roman', Times, serif;
   /* overflow: hidden; */
-  color: white;
+  color: rgb(0, 141, 30);
   max-height: 1.5em;
 }
 .name {
@@ -151,7 +150,7 @@ button:hover {
   text-align: center;
   justify-content: center;
   align-items: center;
-  grid-row: 1;
+  grid-row: 2;
   grid-column: 3;
 }
 .nameInput {
@@ -178,7 +177,7 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 3;
 }
 .table {
@@ -186,7 +185,7 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-row: 3;
+  grid-row: 4;
   grid-column: 2;
 }
 .tableDiv {
@@ -197,6 +196,6 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 1;
 }

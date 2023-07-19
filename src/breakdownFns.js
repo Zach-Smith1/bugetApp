@@ -58,7 +58,7 @@ export function getSpendingTotals(file, category) {
   }
   for (let name in totals) {
     // round totals to next highest cent
-    let rows = `${name}, ${Math.ceil(totals[name]*100)/100}\n`;
+    let rows = `${name}, ${Number(totals[name].toFixed(2))}\n`;
     // store as csv formatted string
     finalCsv += rows;
   }
@@ -101,19 +101,19 @@ export function fineGrainedBreakdown(file) {
       name = 'WINN DIXIE'
     }
     if (name.slice(0,9) === 'AMZN Mktp' || name.slice(0,6) === 'AMAZON') {
-      name = 'AMAZON '
+      name = 'AMAZON'
     }
     if (name.slice(0,12) === 'Amazon Prime') {
-      name = 'AMAZON '
+      name = 'Amazon Prime'
     }
     if (name.slice(0,6) === 'PANERA') {
-      name = 'PANERA '
+      name = 'PANERA'
     }
     if (name.slice(0,8).toLowerCase() === 'mcdonald') {
-      name = 'MCDONALDS '
+      name = 'MCDONALDS'
     }
     if (name.slice(0,6) === 'GOOGLE') {
-      name = 'GOOGLE '
+      name = 'GOOGLE'
     }
 
 
@@ -127,7 +127,7 @@ export function fineGrainedBreakdown(file) {
   // console.log(totals)
   let breakdown = '';
   for (let name in totals) {
-    breakdown += `${name}, ${Math.ceil(totals[name]*100)/100}\n`;
+    breakdown += `${name}, ${Number(totals[name].toFixed(2))}\n`;
   }
   return "Establishment, $ Spent\n"+breakdown
 }

@@ -28,7 +28,6 @@ class App extends React.Component {
   addCategory = (e) => {
     e.preventDefault();
     let val = e.target.value
-    console.log('val here', val)
     if (Object.keys(this.state.object).includes(val)) {
       this.setState({
         category: val,
@@ -128,30 +127,9 @@ class App extends React.Component {
     }
     if (prevState.file !== this.state.file) {
       let totals = getSpendingTotals(this.state.file);
-      let series = this.state.series;
-      let internet = totals[1].Internet || 0;
-      let gas = Math.floor(totals[1]['Gas/Automotive']) || 0;
-      let air = Math.floor(totals[1].Airfare) || 0;
-      series[1] = Math.floor(totals[1].Insurance) || 0;
-      series[2] = Math.floor(totals[1].Dining) || 0;
-      series[3] = 0;
-      series[4] = internet + totals[1]['Phone/Cable'];
-      series[5] = gas + air;
-      series[6] = Math.floor(totals[1]['Health Care']) || 0;
-      series[7] = Math.floor(totals[1].Merchandise) || 0;
       this.setState({
-        series: series,
         download: totals[0],
         object: totals[1]
-      })
-    }
-    if (prevState.income !== this.state.income || prevState.housing !== this.state.housing) {
-      let series = this.state.series;
-      series[0] = this.state.housing > 0 ? Number(this.state.housing) : 0;
-      let total = series.reduce((a,b) => a + b);
-      series[3] = (this.state.income - total) > 0 ? (this.state.income - total) : 0;
-      this.setState({
-        series: series
       })
     }
     // this code is so that the name input box doesn't disappear if you delete all the text
@@ -193,7 +171,6 @@ class App extends React.Component {
     const link = document.createElement("a");
     link.href = url;
     let name = this.state.name
-    console.log(name,name.slice(-3))
     if (name.slice(-3) !== "csv") {
       name += '.csv'
     }
@@ -212,25 +189,7 @@ class App extends React.Component {
     this.setState({
       [state]: val
     })
-    console.log(state, this.state[state])
   }
-
-  nameChange = (e) => {
-    e.preventDefault();
-    let val = e.target.value;
-    this.setState({
-      name: val
-    })
-  }
-
-  incomeChange = (e) => {
-    e.preventDefault();
-    let val = e.target.value
-    this.setState({
-      income: val
-    })
-  }
-
 
   render() {
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
@@ -254,7 +213,8 @@ class App extends React.Component {
     }
     if (this.state.download) {
       baseGraph = <div className='donut'>Suggested Budget<br/><Donut version='1'/></div>
-      myGraph = <div className='myDonut'>My Spending<br/><MyDonut series={this.state.series} key={this.state.series.join('_')}/></div>
+      myGraph = <div className='myDonut'>My Spending<br/>
+        <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')}/></div>
       // Housing, Insurance, Food, Savings, Utilities, Transportation, Needs, Wants
       let list = Object.keys(this.state.object);
       let all = [<option key='base' value={null}>All</option>];
@@ -284,11 +244,8 @@ class App extends React.Component {
     }
 
     return (
-      <div>
-        <h1>
-          <span id="nav">&ensp;<a id="home" onClick={this.startPage}>Spending Tracker</a></span><br />
-        </h1>
-        <div className='grid'>
+      <div className='grid'>
+        <h1 id="nav">$pending Tracker</h1>
         <div className={`drag-drop-input ${this.state.dragging ? 'dragging' : ''}`}
           onDragEnter={this.dragEnter} onDragLeave={this.dragLeave}
           onDragOver={this.dragOver} onDrop={this.dragDrop}>
@@ -306,7 +263,6 @@ class App extends React.Component {
         <div className='downloadButton'>{downloadButton}</div>
         <div className='category'>{category}</div>
         <div className='table'>{table}</div>
-        </div>
       </div>
     );
   }
