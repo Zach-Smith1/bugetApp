@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FileReader } from "react";
-import { CsvToHtmlTable } from "react-csv-to-table";
+import Table from './table.js';
+import Papa from 'papaparse';
 import { getSpendingTotals, fineGrainedBreakdown } from './breakdownFns.js';
 import Donut from "./donut.js";
 import MyDonut from "./myDonut.js"
@@ -41,6 +42,28 @@ class App extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.category !== this.state.category) {
+      let totals = getSpendingTotals(this.state.file, this.state.category);
+      this.setState({
+        download: totals
+      })
+    }
+    if (prevState.file !== this.state.file) {
+      let totals = getSpendingTotals(this.state.file);
+      this.setState({
+        download: totals[0],
+        object: totals[1]
+      })
+    }
+    // this code is so that the name input box doesn't disappear if you delete all the text
+    if (this.state.name === '') {
+      this.setState({
+        name: ' '
+      })
+    }
+  }
+
   dragEnter = (e) => {
     e.preventDefault();
     this.setState({
@@ -57,6 +80,19 @@ class App extends React.Component {
 
   dragOver = (e) => {
     e.preventDefault();
+  };
+
+
+  dragDrop = (e) => {
+    e.preventDefault();
+    this.setState({
+      dragging: false
+    })
+    if (e.dataTransfer.files[0].name.slice(-3) !== 'csv') {
+      alert('Only .csv files currently supported')
+    } else {
+      this.fileReaderCode(e.dataTransfer.files)
+    }
   };
 
   fileReaderCode = (input) => {
@@ -110,36 +146,6 @@ class App extends React.Component {
     }
   }
 
-  dragDrop = (e) => {
-    e.preventDefault();
-    this.setState({
-      dragging: false
-    })
-    this.fileReaderCode(e.dataTransfer.files)
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.category !== this.state.category) {
-      let totals = getSpendingTotals(this.state.file, this.state.category);
-      this.setState({
-        download: totals
-      })
-    }
-    if (prevState.file !== this.state.file) {
-      let totals = getSpendingTotals(this.state.file);
-      this.setState({
-        download: totals[0],
-        object: totals[1]
-      })
-    }
-    // this code is so that the name input box doesn't disappear if you delete all the text
-    if (this.state.name === '') {
-      this.setState({
-        name: ' '
-    })
-    }
-  }
-
   getTotals = (e) => {
     e.preventDefault();
     let totals = getSpendingTotals(this.state.file);
@@ -179,7 +185,11 @@ class App extends React.Component {
   };
 
   importFile = (e) => {
-    this.fileReaderCode(e.target.files)
+    if (e.target.files[0].name.slice(-3) !== 'csv') {
+      alert('Only .csv files currently supported')
+    } else {
+      this.fileReaderCode(e.target.files)
+    }
   }
 
   inputChange = (e) => {
@@ -221,21 +231,23 @@ class App extends React.Component {
       list.forEach((cat) => {
         all.push(<option key={cat} value={cat}>{cat}</option>)
       })
+
       // category = selector dropdown of all payment categories from initial csv file
       category =
-        <form>
+      <form>
           <select className='categoryWheel' name="category" onChange={this.addCategory}>
             {all}
           </select>
           <label id='categoryLabel' htmlFor='category'>&emsp;Show</label>
         </form>
+
       // download button = button to download the table displayed on screen as a csv file to local device
       downloadButton = <button onClick={this.handleDownloadCSV}>Download Table</button>
+      // Assuming this.state.download contains the CSV string
+      const parsedData = Papa.parse(this.state.download, { header: true });
+      const data = parsedData.data;
       table = <div className="tableDiv">
-        <CsvToHtmlTable
-          data={this.state.download}
-          csvDelimiter=","
-        />
+      <Table csv={this.state.download}/>
       </div>
     }
     if (this.state.category) {
