@@ -11,6 +11,7 @@
     "start": "nodemon server.js",
     "dev": "webpack --mode development --watch",
     "prod": "webpack --mode production",
+    "webpack": "webpack --mode production",
     "heroku-postbuild": "npm install && npm run webpack --mode production"
   },
   "dependencies": {
