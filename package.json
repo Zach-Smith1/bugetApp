@@ -10,7 +10,8 @@
     "clean": "rm dist/bundle.js",
     "start": "nodemon server.js",
     "dev": "webpack --mode development --watch",
-    "prod": "webpack --mode production"
+    "prod": "webpack --mode production",
+    "heroku-postbuild": "npm install && npm run webpack --mode production"
   },
   "dependencies": {
     "axios": "^1.4.0",
