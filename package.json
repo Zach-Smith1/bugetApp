@@ -12,7 +12,7 @@
   "license": "ISC",
   "scripts": {
     "clean": "rm dist/bundle.js",
-    "start": "node dist/index.js",
+    "start": "node dist/index.html",
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production"
   },
