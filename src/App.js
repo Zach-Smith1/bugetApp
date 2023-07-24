@@ -202,8 +202,14 @@ class App extends React.Component {
   }
 
   render() {
+    let inputMessage
+    if (window.screen.width < 768) {
+      inputMessage = "Tap to upload file"
+    } else {
+      inputMessage = <><strong>Drag and Drop Credit Card or Bank Statement(s)</strong><br/> or click to browse</>
+    }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
-    let [name, totals, fine, downloadButton, category, specifics, table, baseGraph, myGraph, custom] = Array(10).fill(null);
+    let [name, totals, fine, downloadButton, category, table, baseGraph, myGraph, custom] = Array(9).fill(null);
     if (this.state.name) {
       // name = name of imported file
       name = <div>
@@ -261,19 +267,18 @@ class App extends React.Component {
           onDragEnter={this.dragEnter} onDragLeave={this.dragLeave}
           onDragOver={this.dragOver} onDrop={this.dragDrop}>
           {this.file ? (<div>File: {this.name}</div>) :
-          (<div className='dragMessage'><strong>Drag and Drop Credit Card or Bank Statement(s)</strong><br/> or click to browse</div>)}
+          (<div className='dragMessage' id='d&d'>{inputMessage}</div>)}
           <input className ='inputButton' type='file' name='file' onChange={this.importFile} multiple/>
           <label htmlFor='file'></label>
         </div>
-        {baseGraph}
-        {myGraph}
         <div className='name'>{name}</div>
-        <div className='totals'>{totals}</div>
+        {baseGraph}
+        <div className='specifics'>{myGraph}</div>
         <div className='custom'>{custom}</div>
-        <div className='specifics'>{specifics}</div>
-        <div className='downloadButton'>{downloadButton}</div>
         <div className='category'>{category}</div>
+        <div className='totals'>{totals}</div>
         <div className='table'>{table}</div>
+        <div className='downloadButton'>{downloadButton}</div>
       </div>
     );
   }

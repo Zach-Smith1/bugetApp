@@ -24,7 +24,7 @@ const MyDonut = ({ totals, income, housing }) => {
 
   return (
     <div className="myDonut">
-      <Chart options={options} series={series} type="donut" width="480" />
+      <Chart options={options} series={series} type="donut" width="480"/>
     </div>
   );
 }

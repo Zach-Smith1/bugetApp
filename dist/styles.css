@@ -27,17 +27,18 @@ body {
   width: 95%;
 }
 button {
-  max-width: 50%;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  max-width: 75%;
   cursor: pointer;
   border-radius: 10%;
   margin: 2%;
-  background-image: linear-gradient(to right, #f6d365 0%, #f95c31 59%, #f6d365 100%);
+  background-image: linear-gradient(to right, #3c9324 0%, #31f9ce 59%, #85f665 100%);
   transition-duration: 1s;
   flex: 1 1 auto;
   padding: 20px;
   transition: 0.5s;
   background-size: 200% auto;
-  color: white;
+  color: rgb(15, 0, 0);
   border-radius: 10px;
 }
 button:hover {
@@ -54,10 +55,6 @@ button:hover {
   align-items: center;
   grid-row: 3;
   grid-column: 2;
-}
-#categoryLabel {
-  position: absolute;
-  left: 15%;
 }
 .categoryWheel {
   position: relative;
@@ -106,18 +103,25 @@ button:hover {
   border-style: solid;
 }
 .dragMessage {
-  position: absolute;
-  bottom: 10%;
+  position: inherit;
   width: 100%;
 }
 .grid {
   display: grid;
   grid-template-columns: 33% 33% 33%;
   grid-template-rows: 8% 33% 33% 33%;
+  gap: 10px;
   position: absolute;
   bottom: 0px;
   width: 100vw;
   height: 95vh;
+}
+@media (max-width: 768px) {
+  .grid {
+    display: flex; /* Switch to Flexbox on mobile */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
+  }
 }
 .inputButton {
   height: 100%;
@@ -187,10 +191,6 @@ button:hover {
   align-items: center;
   grid-row: 4;
   grid-column: 2;
-}
-.tableDiv {
-  position: absolute;
-  top: 0px;
 }
 .specifics {
   display: flex;
