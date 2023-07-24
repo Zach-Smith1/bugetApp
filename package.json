@@ -11,7 +11,7 @@
     "start": "node dist/bundle.js",
     "dev": "webpack --mode development --watch",
     "prod": "webpack --mode production",
-    "heroku-postbuild": "npm install && npm run prod"
+    "heroku-postbuild": "npm install"
   },
   "dependencies": {
     "axios": "^1.4.0",
