@@ -2,6 +2,9 @@
   "name": "rbs",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "16.x"
+  },
   "main": "index.js",
   "keywords": [],
   "author": "",
@@ -27,7 +30,8 @@
     "stream-browserify": "^3.0.0",
     "style-loader": "^3.3.1",
     "util": "^0.12.5",
-    "webpack": "^5.88.2"
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
