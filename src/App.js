@@ -222,9 +222,9 @@ class App extends React.Component {
       </div>
     }
     if (this.state.download) {
-      // baseGraph = <div className='donut'>Suggested Budget<br/><Donut version='1'/></div>
-      // myGraph = <div className='myDonut'>My Spending<br/>
-      //   <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')}/></div>
+      baseGraph = <div className='donut'>Suggested Budget<br/><Donut version='1'/></div>
+      myGraph = <div className='myDonut'>My Spending<br/>
+        <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')}/></div>
       let list = Object.keys(this.state.object);
       let all = [<option key='base' value={null}>All</option>];
       list.forEach((cat) => {
