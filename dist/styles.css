@@ -116,11 +116,20 @@ button:hover {
   width: 100vw;
   height: 95vh;
 }
-@media (max-width: 800px) {
+@media screen and (max-width: 800px) {
   .grid {
     display: flex; /* Switch to Flexbox on mobile */
     flex-direction: column; /* Stack items vertically */
     align-items: center;
+  }
+  .inputButton {
+    height: 200%;
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
   }
 }
 .inputButton {
