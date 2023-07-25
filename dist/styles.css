@@ -116,7 +116,7 @@ button:hover {
   width: 100vw;
   height: 95vh;
 }
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .grid {
     display: flex; /* Switch to Flexbox on mobile */
     flex-direction: column; /* Stack items vertically */
