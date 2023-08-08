@@ -114,6 +114,9 @@ button:hover {
     top: 0px;
     z-index: 1;
   }
+  .tableDiv {
+    position: inherit;
+  }
 }
 .inputButton {
   height: 100%;
