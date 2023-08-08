@@ -49,14 +49,23 @@ import Chart from 'react-apexcharts'
 
     const Donut = ({ version }) => {
     const options = version === '1' ? {
-      labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants']
-    } : {labels: ['Living Expenses', 'Debt/Savings', 'Wants/Fun']}
+      labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants'],
+      title: {
+        text: 'Suggested Budget',
+        align: 'center'
+      }
+    } :
+    {labels: ['Living Expenses', 'Debt/Savings', 'Wants/Fun'],
+      title: {
+      text: 'Suggested Budget',
+      align: 'center'
+    }}
     const series = version === '1' ? [30,10,15,10,5,10,15,5] : [70,20,10]
 
 
     return (
       <div className="donut">
-        <Chart options={options} series={series} type="donut" width="380" />
+        <Chart options={options} series={series} type="donut"/>
       </div>
     );
   }

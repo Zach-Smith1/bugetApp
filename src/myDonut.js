@@ -11,7 +11,11 @@ const MyDonut = ({ totals, income, housing }) => {
     totalSpend += num
   }
   const options = {
-    labels: Object.keys(totals)
+    labels: Object.keys(totals),
+    title: {
+      text: 'My Spending',
+      align: 'center'
+    }
   }
   if (income > totalSpend) {
     series.push(Number((income - totalSpend).toFixed(2)));
@@ -24,7 +28,7 @@ const MyDonut = ({ totals, income, housing }) => {
 
   return (
     <div className="myDonut">
-      <Chart options={options} series={series} type="donut" width="480"/>
+      <Chart options={options} series={series} type="donut" width='100%' />
     </div>
   );
 }
