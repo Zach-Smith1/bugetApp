@@ -8,10 +8,8 @@ export function getSpendingTotals(file, category) {
   const columnNames = allRows[0].split(',')
   // omit column names from array of rows
   allRows = allRows.slice(1);
-
   // create output object for this function to return
   const totals = {};
-
   // boolean variable to keep track of adding column names to output file
   let head = true;
   let finalCsv = '';
@@ -40,7 +38,6 @@ export function getSpendingTotals(file, category) {
       }
       rowObj[columnNames[i]] = rowArr[i];
   }
-
     /* each row of is represented as key value pair in the final object, the key is the item number, the value
      is an object of column names (keys) and values */
     if (totals.hasOwnProperty(rowObj[columnNames[4]])) {
@@ -116,40 +113,19 @@ export function fineGrainedBreakdown(file) {
   let breakdown = [];
   for (let key in totals) {
     let newRow = `${key}, ${Number(totals[key].toFixed(2))}\n`;
-    if (breakdown.length === 0) {
-      breakdown.push(newRow);
-    } else {
-      let position;
-      let count = 0;
-      for (let i = 0; i < breakdown.length; i++) {
-        count++;
-        if (count > 10) break
-        position = 0;
-        if (breakdown[i][position] > key[position]) {
-          breakdown.splice(i, 0, newRow)
-          break
-        } else if (breakdown[i][position] < key[position]) {
-          if (i === breakdown.length - 1) {
-            breakdown.push(newRow);
-            break
-          } else {
-            continue
-          }
-        } else {
-          while (breakdown[i][position] === key[position] && key[position] !== undefined) {
-            position++
-          }
-          if (breakdown[i][position] > key[position]) {
-            breakdown.splice(i, 0, newRow)
-            break;
-          } else {
-            breakdown.splice(i + 1, 0, newRow)
-            break
-          }
-        }
-      }
-    }
+    breakdown.push(newRow);
   }
+  breakdown.sort((a,b) => {
+      const nameA = a.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
   return "Establishment, $ Spent\n"+breakdown.join('')
 }
 
