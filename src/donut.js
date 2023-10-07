@@ -1,73 +1,36 @@
 import React, { useState } from "react";
 import Chart from 'react-apexcharts'
 
-  const plotoptions = {
-          donut: {
-            size: '65%',
-            background: 'transparent',
-            labels: {
-              show: false,
-              name: {
-                show: true,
-                fontSize: '22px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                color: undefined,
-                offsetY: -10,
-                formatter: function (val) {
-                  return val
-                }
-              },
-              value: {
-                show: true,
-                fontSize: '16px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 400,
-                color: undefined,
-                offsetY: 16,
-                formatter: function (val) {
-                  return val
-                }
-              },
-              total: {
-                show: false,
-                showAlways: false,
-                label: 'Total',
-                fontSize: '22px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                color: '#373d3f',
-                formatter: function (w) {
-                  return w.globals.seriesTotals.reduce((a, b) => {
-                    return a + b
-                  }, 0)
-                }
-              }
-            }
-          }
-        }
-
-    const Donut = ({ version }) => {
-    const options = version === '1' ? {
-      labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants'],
+const Donut = ({ version }) => {
+  const options = version ? {
+    labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants'],
+    legend: {
+      show: true,
+      position: 'bottom'
+    },
+    title: {
+      text: 'Suggested Budget',
+      align: 'center'
+    }
+  } :
+    {
+      labels: ['Living Expenses', 'Debt/Savings', 'Wants/Fun'],
+      legend: {
+        show: true,
+        position: 'bottom'
+      },
       title: {
         text: 'Suggested Budget',
         align: 'center'
       }
-    } :
-    {labels: ['Living Expenses', 'Debt/Savings', 'Wants/Fun'],
-      title: {
-      text: 'Suggested Budget',
-      align: 'center'
-    }}
-    const series = version === '1' ? [30,10,15,10,5,10,15,5] : [70,20,10]
+    }
+  const series = version ? [30, 10, 15, 10, 5, 10, 15, 5] : [70, 20, 10]
 
-
-    return (
-      <div className="donut">
-        <Chart options={options} series={series} type="donut"/>
-      </div>
-    );
-  }
+  return (
+    <div className="donut">
+      <Chart options={options} series={series} type="donut"/>
+    </div>
+  );
+}
 
 export default Donut;

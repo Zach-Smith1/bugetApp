@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 export function getSpendingTotals(file, category) {
   console.log(`getSpendingTotals is parsing csv file...`);
   // const dataString = fs.readFileSync(file, "utf8");
@@ -23,7 +21,7 @@ export function getSpendingTotals(file, category) {
     if (rowArr[3] === 'Description' || rowArr[4] === undefined || rowArr[3].slice(0,11) === "CAPITAL ONE") {
       return
     }
-    // if there's a credit change it to a negative debit
+    // if there's a credit change it to a negative debit (for Capital One)
     if (rowArr[6] > 0) {
       rowArr[5] = '-'+rowArr[6]
     }
@@ -53,7 +51,6 @@ export function getSpendingTotals(file, category) {
   })
   // if getting specific category breakdown return (only spending from that category)
   if (category) {
-    console.log('Final CSV', finalCsv)
     return finalCsv
   }
   for (let name in totals) {
@@ -62,25 +59,25 @@ export function getSpendingTotals(file, category) {
     // store as csv formatted string
     finalCsv += rows;
   }
-  console.log('Final CSV by Category: ', finalCsv)
   //return totals as csv with header added and as an object (to use keys for category selector wheel)
   return ["Category, $ Spent\n"+finalCsv,totals]
 }
 
 export function fineGrainedBreakdown(file) {
-  console.log(`fineGrainedBreakdown is parsing ${file} spreadsheet file...`);
-
-  // const dataString = fs.readFileSync(file, "utf8");
+  console.log(`fineGrainedBreakdown is parsing payments...`);
   // split raw data into rows
   let allRows = file.split('\n')
+  if (allRows[0].split(',').length < 3) {
+    alert("Something went wrong, already Grouped!")
+    return null
+  }
   let headerRow = 0;
   const columnNames = allRows[headerRow].split(',');
   // omit column names from array of rows
   allRows = allRows.slice(headerRow + 1);
   // create output string for this function to return
   const totals = {};
-
-  // iterate through the rows and add them to the new object only if the item has an NDC
+  // iterate through the rows and add them to the new object only if the item has
   let descriptionCol = 0;
   while (columnNames[descriptionCol] !== 'Description') {
     descriptionCol ++
@@ -89,46 +86,70 @@ export function fineGrainedBreakdown(file) {
   while (columnNames[debitCol] !== 'Debit') {
     debitCol ++
   }
+  // check for numbers in establishment names and remove them to make a common name
+  let numbers = ['#','1','2','3','4','5','6','7','8','9','10'];
+  let finder = true;
   allRows.forEach((row) => {
     let rowArr = row.split(',');
     if (rowArr[descriptionCol] === undefined) return
     let name = rowArr[descriptionCol];
-    // edge cases to combine different store locations
-    if (name.slice(0,6) === 'WAL-MA' || name.slice(0,6) === 'WM SUP') {
-      name = 'WAL-MART'
+    name = name.split(' ');
+    let simpleName = [name[0]];
+    for (let i = 1; i < name.length; i ++) {
+      finder = true;
+      for (let j = 0; j < name[i].length; j ++) {
+        if (numbers.includes(name[i][j])) {
+          finder = false;
+          break;
+        }
+      }
+      if (finder) simpleName.push(name[i]);
     }
-    if (name.slice(0,6) === 'WINN D') {
-      name = 'WINN DIXIE'
-    }
-    if (name.slice(0,9) === 'AMZN Mktp' || name.slice(0,6) === 'AMAZON') {
-      name = 'AMAZON'
-    }
-    if (name.slice(0,12) === 'Amazon Prime') {
-      name = 'Amazon Prime'
-    }
-    if (name.slice(0,6) === 'PANERA') {
-      name = 'PANERA'
-    }
-    if (name.slice(0,8).toLowerCase() === 'mcdonald') {
-      name = 'MCDONALDS'
-    }
-    if (name.slice(0,6) === 'GOOGLE') {
-      name = 'GOOGLE'
-    }
-
-
-    if (totals.hasOwnProperty(name)) {
-      totals[name] += Number(rowArr[debitCol])
+    simpleName = simpleName.join(' ');
+    if (totals.hasOwnProperty(simpleName)) {
+      totals[simpleName] += Number(rowArr[debitCol])
     } else {
-      totals[name] = Number(rowArr[debitCol])
+      totals[simpleName] = Number(rowArr[debitCol])
     }
   })
-  console.log(`\nTotals Aggregated from ${file.slice(0, -4).toUpperCase()}\n`)
-  // console.log(totals)
-  let breakdown = '';
-  for (let name in totals) {
-    breakdown += `${name}, ${Number(totals[name].toFixed(2))}\n`;
+  // below code is to add the totals to a final output in alphabetical order
+  let breakdown = [];
+  for (let key in totals) {
+    let newRow = `${key}, ${Number(totals[key].toFixed(2))}\n`;
+    if (breakdown.length === 0) {
+      breakdown.push(newRow);
+    } else {
+      let position;
+      let count = 0;
+      for (let i = 0; i < breakdown.length; i++) {
+        count++;
+        if (count > 10) break
+        position = 0;
+        if (breakdown[i][position] > key[position]) {
+          breakdown.splice(i, 0, newRow)
+          break
+        } else if (breakdown[i][position] < key[position]) {
+          if (i === breakdown.length - 1) {
+            breakdown.push(newRow);
+            break
+          } else {
+            continue
+          }
+        } else {
+          while (breakdown[i][position] === key[position] && key[position] !== undefined) {
+            position++
+          }
+          if (breakdown[i][position] > key[position]) {
+            breakdown.splice(i, 0, newRow)
+            break;
+          } else {
+            breakdown.splice(i + 1, 0, newRow)
+            break
+          }
+        }
+      }
+    }
   }
-  return "Establishment, $ Spent\n"+breakdown
+  return "Establishment, $ Spent\n"+breakdown.join('')
 }
 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { FileReader } from "react";
+// import { FileReader } from "react";
 import Table from './table.js';
-import Papa from 'papaparse';
 import { getSpendingTotals, fineGrainedBreakdown } from './breakdownFns.js';
 import Donut from "./donut.js";
 import MyDonut from "./myDonut.js"
@@ -18,43 +17,91 @@ class App extends React.Component {
       category: null,
       categories: null,
       dragging: false,
-      show: 'block',
+      show: 'none',
       series: [1,2,3,0,5,6,7,8],
       income: 0,
       housing: 0,
-      savings: 0
+      savings: 0,
+      version: false
     }
   }
 
-  addCategory = (e) => {
-    e.preventDefault();
-    let val = e.target.value
+  addCategory = (val) => {
     if (Object.keys(this.state.object).includes(val)) {
       this.setState({
         category: val,
         show: 'block'
     })
-    } else {
-      let totals = getSpendingTotals(this.state.file);
-      this.setState({
-        download: totals[0]
-      })
+    }
+  }
+
+  remover = (e) => {
+    e.preventDefault();
+    let nodes = e.target.parentNode.childNodes;
+    let first = nodes[0].innerHTML;
+    let category = nodes[2].innerHTML;
+    let amount = nodes[3].innerHTML;
+    let totals = {...this.state.object};
+    totals[category] -= amount;
+    let files = this.state.file.split('\n')
+    let row = 0;
+    if (first != 'Transaction Date' && first != 'Category') {
+      let found = false;
+      console.log(files[0])
+      while(found === false && files[row]) {
+        row ++
+        let col = files[row].split(',');
+        if (col[4] == category) {
+          if (col[5] == amount || col[6] == amount * -1) {
+            found = true
+            nodes.forEach((n) => n.innerHTML = '')
+            files.splice(row, 1)
+        }
+      }
+    }
+    }
+    files = files.join('\n');
+    this.setState({
+      file: files
+    })
+    document.getElementById('table').removeEventListener('click', this.remover);
+    let rows = document.getElementsByClassName('rows');
+    for (let i = 0; i < rows.length; i ++) {
+      rows[i].id = 'none'
+    }
+  }
+
+  editor = (e) => {
+    e.preventDefault();
+    let rows = document.getElementsByClassName('rows');
+    document.getElementById('table').addEventListener('click', this.remover)
+    console.log(rows);
+    for (let i = 0; i < rows.length; i ++) {
+      rows[i].id = 'hover'
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.file !== this.state.file) {
+      let totals = getSpendingTotals(this.state.file);
+      if (prevState.name !== this.state.name) {
+        this.setState({
+          download: totals[0], // string
+          object: totals[1] // object
+        })
+      } else {
+        this.setState({
+          object: totals[1]
+        })
+      }
+      console.log('file change')
+    }
     if (prevState.category !== this.state.category) {
       let totals = getSpendingTotals(this.state.file, this.state.category);
       this.setState({
         download: totals
       })
-    }
-    if (prevState.file !== this.state.file) {
-      let totals = getSpendingTotals(this.state.file);
-      this.setState({
-        download: totals[0],
-        object: totals[1]
-      })
+      console.log('category change')
     }
     // this code is so that the name input box doesn't disappear if you delete all the text
     if (this.state.name === '') {
@@ -62,6 +109,7 @@ class App extends React.Component {
         name: ' '
       })
     }
+
   }
 
   dragEnter = (e) => {
@@ -116,7 +164,6 @@ class App extends React.Component {
         };
         reader.readAsText(f);
       });
-      console.log('ReadFile Running')
     };
     reader.onload = () => {
       readerFiles += reader.result;
@@ -162,12 +209,22 @@ class App extends React.Component {
     })
   }
 
-  getFineGrained = () => {
-    let totals = fineGrainedBreakdown(this.state.download);
+  showTotal = () => {
+    let totals = getSpendingTotals(this.state.file);
     this.setState({
-      download: totals,
+      download: totals[0],
       show: 'none'
     })
+  }
+
+  getFineGrained = () => {
+    let totals = fineGrainedBreakdown(this.state.download);
+    if (totals) {
+      this.setState({
+        download: totals,
+        show: 'none'
+      })
+    }
   }
 
   handleDownloadCSV = (e) => {
@@ -201,6 +258,14 @@ class App extends React.Component {
     })
   }
 
+  versionChange = (e) => {
+    e.preventDefault();
+    let ver = !this.state.version
+    this.setState({
+      version: ver
+    })
+  }
+
   render() {
     let inputMessage
     if (window.screen.width < 768) {
@@ -209,55 +274,54 @@ class App extends React.Component {
       inputMessage = <><strong>Drag and Drop Credit Card or Bank Statement(s)</strong><br/> or click to browse</>
     }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
-    let [name, totals, fine, downloadButton, category, table, baseGraph, myGraph, custom] = Array(9).fill(null);
+    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle] = Array(11).fill(null);
     if (this.state.name) {
       // name = name of imported file
       name = <div>
         Spending Data Generated from:<br/>
         <input className='nameInput' name='name' type='text' placeholder='a' value={this.state.name} onChange={this.inputChange}/>
       </div>
-      custom = <div>
-        <div>
-          <input className='incomeInput' name='income' type='number' placeholder='3000' value={this.state.income} onChange={this.inputChange}/>
-          <label id='incomeLabel' htmlFor='income'>&emsp;Update Income</label>
+      income = <div>
+        <input className='incomeInput' name='income' type='number' placeholder='3000' value={this.state.income} onChange={this.inputChange}/>
+        <label id='incomeLabel' htmlFor='income'>&emsp;Add Income</label>
         </div>
-        <div>
-          <input className='housingInput' name='housing' type='number' placeholder='1500' value={this.state.housing} onChange={this.inputChange}/>
-          <label id='housingLabel' htmlFor='housing'>&emsp;Update Housing Cost</label>
-        </div>
+      housing = <div>
+        <input className='housingInput' name='housing' type='number' placeholder='1500' value={this.state.housing} onChange={this.inputChange}/>
+        <label id='housingLabel' htmlFor='housing'>&emsp;Add Housing Cost</label>
       </div>
     }
     if (this.state.download) {
-      baseGraph = <div className='donut'><Donut version='1'/></div>
+      toggle = <button id='toggle' onClick={this.versionChange}>Toggle Version</button>
+      baseGraph = <div className='donut'>
+      <Donut version={this.state.version}/>
+      </div>
       myGraph = <div className='myDonut'>
-        <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')}/></div>
+        <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')} change={this.addCategory}/></div>
       let list = Object.keys(this.state.object);
       let all = [<option key='base' value={null}>All</option>];
       list.forEach((cat) => {
         all.push(<option key={cat} value={cat}>{cat}</option>)
       })
 
-      // category = selector dropdown of all payment categories from initial csv file
-      category =
-      <form>
-          <select className='categoryWheel' name="category" onChange={this.addCategory}>
-            {all}
-          </select>
-          <label id='categoryLabel' htmlFor='category'>&emsp;Show</label>
-        </form>
+      // **** DEPRECATED***** selector dropdown wheel of all payment categories from initial csv file
+      // category =
+      // <form>
+      //     <select className='categoryWheel' name="category" onChange={this.addCategory}>
+      //       {all}
+      //     </select>
+      //     <label id='categoryLabel' htmlFor='category'>&emsp;Show</label>
+      //   </form>
 
       // download button = button to download the table displayed on screen as a csv file to local device
-      downloadButton = <button onClick={this.handleDownloadCSV}>Download Table</button>
+      downloadButton = <button onClick={this.handleDownloadCSV}>Download Current Table</button>
       // Assuming this.state.download contains the CSV string
-      const parsedData = Papa.parse(this.state.download, { header: true });
-      const data = parsedData.data;
-      table = <div className="tableDiv">
-      <Table csv={this.state.download}/>
-      </div>
+      table = <Table className="tableDiv" csv={this.state.download}/>
     }
     if (this.state.category) {
       // totals = button that shows all transactions from imported csv file aggregated by type/ category
-      totals = <button style={{ display: this.state.show }} onClick={this.getFineGrained}>Combine Payments</button>
+      totals = <button onClick={this.getFineGrained}>Group by Vendor</button>
+      showAll = <button onClick={this.showTotal}>Overview</button>
+      edit = <button onClick={this.editor}>Edit Table</button>
     }
 
     return (
@@ -272,12 +336,13 @@ class App extends React.Component {
           <label htmlFor='file'></label>
         </div>
         <div className='name'>{name}</div>
+        {toggle}
         {baseGraph}
         {myGraph}
-        <div className='custom'>{custom}</div>
-        <div className='category'>{category}</div>
-        <div className='totals'>{totals}</div>
-        <div className='table'>{table}</div>
+        <div className='custom'>{income}{housing}</div>
+        {/* <div className='category'></div> */}
+        <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>{showAll}{totals}{edit}</div>
+        <div className='table' id='table'>{table}</div>
         <div className='downloadButton'>{downloadButton}</div>
       </div>
     );

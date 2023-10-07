@@ -46,7 +46,7 @@ class Table extends React.Component {
         </thead>
         <tbody>
           {tableData.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr key={rowIndex} className='rows'>
               {Object.values(row).map((cell, cellIndex) => (
                 <td key={cellIndex}>{cell}</td>
               ))}

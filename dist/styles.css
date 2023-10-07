@@ -43,10 +43,13 @@ button:hover {
 .custom {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
+  align-items: center;
   grid-row: 4;
-  grid-column: 1;
-  margin: 1em;
+  grid-column: 2;
+  min-height: 5vh;
+  margin-top: 1vh;
+  padding: 10%;
 }
 .downloadButton {
   display: flex;
@@ -56,18 +59,21 @@ button:hover {
   grid-column: 3;
 }
 .donut {
-  grid-row: 1;
+  grid-row: 2;
   grid-column: 1;
   text-align: center;
   font-family:'Times New Roman', Times, serif;
   font-size: x-large;
   margin-bottom: 10px;
-  padding: 15px;
+  padding: 5%;
 }
 .drag-drop-input {
+  display: flex;
+  align-items: center;
   grid-column: 2;
   grid-row: 2;
   text-align: center;
+  margin: 1%;
   border-radius: 1em;
   border-width: 10px;
   border-style: dashed;
@@ -89,21 +95,31 @@ button:hover {
   position: inherit;
   width: 100%;
 }
+#hover:hover {
+  transform: scale(1.1); /* Make it slightly larger (110% of its original size) */
+  background-color: red; /* Change the background color to red */
+}
 .grid {
   display: grid;
   grid-template-columns: 33% 33% 33%;
-  grid-template-rows: 8% 33% 33% 33%;
-  gap: 10px;
+  grid-template-rows: 5% 20% 40% 30%;
+  gap: 1%;
   position: absolute;
   bottom: 0px;
   width: 100vw;
-  height: 95vh;
+  height: 100vh;
 }
 @media screen and (max-width: 800px) {
   .grid {
     display: flex; /* Switch to Flexbox on mobile */
     flex-direction: column; /* Stack items vertically */
     align-items: center;
+  }
+  .donut {
+    width: 90%;
+  }
+  .myDonut {
+    width: 100%;
   }
   .inputButton {
     height: 200%;
@@ -114,8 +130,8 @@ button:hover {
     top: 0px;
     z-index: 1;
   }
-  .tableDiv {
-    position: inherit;
+  .table {
+    min-height: 20vh;
   }
 }
 .inputButton {
@@ -128,11 +144,11 @@ button:hover {
 }
 .myDonut {
   grid-row: 3;
-  grid-column: 1;
+  grid-column: 2;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
   font-size: x-large;
-  padding: 2px;
+  padding: 0%;
 }
 /* .specifics {
   display: flex;
@@ -142,15 +158,15 @@ button:hover {
   grid-column: 1;
 } */
 #nav {
-  top: 1px;
   grid-row: 1;
   grid-column: 2;
-  font-size: xx-large;
+  font-size: 5vh;
   text-align: center;
   font-family:'Times New Roman', Times, serif;
   /* overflow: hidden; */
   color: rgb(0, 141, 30);
   max-height: 1.5em;
+  margin-top: 1%;
 }
 .name {
   display: flex;
@@ -159,9 +175,10 @@ button:hover {
   align-items: center;
   grid-row: 2;
   grid-column: 3;
+  font-size: 3vh;
 }
 .nameInput {
-  font-size: xx-large;
+  font-size: 2vh;
   text-align: center;
   border-width: 0px;
   width: -webkit-fill-available
@@ -182,19 +199,27 @@ button:hover {
   grid-row: 3;
   grid-column: 3;
 }
+#toggle {
+  grid-row: 1;
+  grid-column: 1;
+  max-width: fit-content;
+  max-height: min-content;
+}
 .table {
   position: relative;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
+  overflow-y: scroll;
   grid-row: 4;
-  grid-column: 2;
+  grid-column: 1;
+  padding: 1em;
 }
-.tableDiv {
+/* .tableDiv {
   position: absolute;
   top: 0px;
   border-color: "black";
   border-width: 2px;
   background-color: "white";
-}
+} */
 
