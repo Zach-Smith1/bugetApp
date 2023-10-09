@@ -315,7 +315,9 @@ class App extends React.Component {
       // download button = button to download the table displayed on screen as a csv file to local device
       downloadButton = <button onClick={this.handleDownloadCSV}>Download Current Table</button>
       // Assuming this.state.download contains the CSV string
-      table = <Table className="tableDiv" csv={this.state.download}/>
+      table = <div className='table' id='table'>
+        <Table className="tableDiv" csv={this.state.download}/>
+        </div>
     }
     if (this.state.category) {
       // totals = button that shows all transactions from imported csv file aggregated by type/ category
@@ -342,7 +344,7 @@ class App extends React.Component {
         <div className='custom'>{income}{housing}</div>
         {/* <div className='category'></div> */}
         <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>{showAll}{totals}{edit}</div>
-        <div className='table' id='table'>{table}</div>
+        {table}
         <div className='downloadButton'>{downloadButton}</div>
       </div>
     );
