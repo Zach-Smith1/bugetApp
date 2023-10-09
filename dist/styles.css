@@ -213,7 +213,12 @@ button:hover {
   overflow-y: scroll;
   grid-row: 4;
   grid-column: 1;
-  padding: 1em;
+  margin: 1%;
+  border-radius: 1em;
+  border-width: 5px;
+  border-style: double;
+  border-color: black;
+  padding: 1%;
 }
 /* .tableDiv {
   position: absolute;
