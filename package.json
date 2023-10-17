@@ -21,7 +21,6 @@
     "buffer": "^6.0.3",
     "css-loader": "^6.7.2",
     "express": "4.18.2",
-    "fs": "^0.0.1-security",
     "papaparse": "^5.4.1",
     "querystring-es3": "^0.2.1",
     "react": "^18.2.0",
