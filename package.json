@@ -17,6 +17,7 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
+    "@babel/traverse": "^7.23.2",
     "axios": "^1.4.0",
     "buffer": "^6.0.3",
     "css-loader": "^6.7.2",
