@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Chart from 'react-apexcharts'
 
-const Donut = ({ version }) => {
+const Donut = ({ version, legend }) => {
   const options = version ? {
     labels: ['Housing', 'Insurance', 'Food', 'Savings', 'Utilities', 'Transportation', 'Needs', 'Wants'],
     legend: {
@@ -16,7 +16,7 @@ const Donut = ({ version }) => {
     {
       labels: ['Living Expenses', 'Debt/Savings', 'Wants/Fun'],
       legend: {
-        show: true,
+        show: legend,
         position: 'bottom'
       },
       title: {

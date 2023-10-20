@@ -17,11 +17,12 @@ class App extends React.Component {
       download: null,
       object: {},
       edit: false,
+      legend: true,
       category: null,
       categories: null,
       dragging: false,
       show: 'none',
-      series: [1,2,3,0,5,6,7,8],
+      series: [1, 2, 3, 0, 5, 6, 7, 8],
       income: 0,
       housing: 0,
       savings: 0,
@@ -34,8 +35,8 @@ class App extends React.Component {
     if (Object.keys(this.state.object).includes(val)) {
       this.setState({
         category: val,
-        show: 'block'
-    })
+        show: 'flex'
+      })
     }
   }
 
@@ -47,15 +48,15 @@ class App extends React.Component {
     let first = nodes[0].innerHTML;
     let category = nodes[2].innerHTML;
     let amount = nodes[3].innerHTML;
-    let totals = {...this.state.object};
+    let totals = { ...this.state.object };
     totals[category] -= amount;
     let files = this.state.file.split('\n')
     let row = 0;
     if (first != 'Transaction Date' && first != 'Category') {
       let found = false;
       console.log(files[0])
-      while(found === false && files[row]) {
-        row ++
+      while (found === false && files[row]) {
+        row++
         let col = files[row].split(',');
         if (col[4] == category) {
           if (col[5] == amount || col[6] == amount * -1) {
@@ -87,8 +88,7 @@ class App extends React.Component {
   editOn = () => {
     document.getElementById('editButton').id = 'altButton';
     let rows = document.getElementsByClassName('rows');
-    // document.getElementById('table').addEventListener('click', this.openModal);
-    for (let i = 0; i < rows.length; i ++) {
+    for (let i = 0; i < rows.length; i++) {
       rows[i].addEventListener('click', this.openModal);
       rows[i].id = 'hover';
     }
@@ -96,7 +96,7 @@ class App extends React.Component {
   editOff = () => {
     document.getElementById('altButton').id = 'editButton';
     let rows = document.getElementsByClassName('rows');
-    for (let i = 0; i < rows.length; i ++) {
+    for (let i = 0; i < rows.length; i++) {
       rows[i].removeEventListener('click', this.openModal);
       rows[i].id = 'none'
     }
@@ -104,6 +104,14 @@ class App extends React.Component {
   cancelEdit = () => {
     this.closeModal();
     this.edit();
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -207,8 +215,8 @@ class App extends React.Component {
           } catch (error) {
             console.log('Error reading file:', error);
           }
-      };
-      handleFileChange(file)
+        };
+        handleFileChange(file)
       }
       name = 'Multiple Files'
     } else {
@@ -303,10 +311,26 @@ class App extends React.Component {
     })
   }
 
+  handleResize = () => {
+    const minWidthForAction = 1080;
+    const width = window.innerWidth;
+    // const height = window.innerHeight;
+
+    if (width < minWidthForAction && width > 800) {
+      this.setState({
+        legend: false
+      })
+    } else {
+      this.setState({
+        legend: true
+      })
+    }
+  }
+
   render() {
     let inputMessage
     if (window.screen.width < 768) {
-      inputMessage = "Tap to upload file"
+      inputMessage = "Tap to upload CSV file"
     } else {
       inputMessage = <><strong>Drag and Drop Credit Card or Bank Statement(s)</strong><br/> or click to browse</>
     }
@@ -336,10 +360,10 @@ class App extends React.Component {
       }
       toggle = <div id='toggle'><button className='basic' onClick={this.versionChange}>{toggleName}</button></div>
       baseGraph = <div className='donut'>
-      <Donut version={this.state.version}/>
+      <Donut version={this.state.version} legend={this.state.legend}/>
       </div>
       myGraph = <div className='myDonut'>
-        <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')} change={this.addCategory}/></div>
+        <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')} change={this.addCategory} legend={this.state.legend}/></div>
       let list = Object.keys(this.state.object);
       let all = [<option key='base' value={null}>All</option>];
       list.forEach((cat) => {
@@ -356,7 +380,7 @@ class App extends React.Component {
       //   </form>
 
       // download button = button to download the table displayed on screen as a csv file to local device
-      downloadButton = <button onClick={this.handleDownloadCSV}>Download Current Table</button>
+      downloadButton = <button onClick={this.handleDownloadCSV}>Download Table</button>
       // Assuming this.state.download contains the CSV string
       table = <div className='table' id='table'>
         <Table className="tableDiv" csv={this.state.download}/>
@@ -364,9 +388,9 @@ class App extends React.Component {
     }
     if (this.state.category) {
       // totals = button that shows all transactions from imported csv file aggregated by type/ category
-      totals = <button onClick={this.getFineGrained}>Group by Vendor</button>
-      showAll = <button onClick={this.showTotal}>Overview</button>
-      edit = <button id='editButton' onClick={this.edit}>Edit Table</button>
+      totals = <button className='basic' onClick={this.getFineGrained}>Group by Vendor</button>
+      showAll = <button className='basic' onClick={this.showTotal}>Overview</button>
+      edit = <button className='basic' id='editButton' onClick={this.edit}>Edit Table</button>
     }
 
     return (
@@ -388,7 +412,9 @@ class App extends React.Component {
         {myGraph}
         <div className='custom'>{income}{housing}</div>
         {/* <div className='category'></div> */}
-        <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>{showAll}{totals}{edit}</div>
+        <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>
+          <span>{showAll}{totals}{edit}</span>
+        </div>
         {table}
         <div className='downloadButton'>{downloadButton}</div>
         <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>

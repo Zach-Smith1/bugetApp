@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Chart from 'react-apexcharts'
 
-const MyDonut = ({ totals, income, housing, change }) => {
-
+const MyDonut = ({ totals, income, housing, change, legend }) => {
+  console.log(legend)
   let series = [];
   let labels = Object.keys(totals)
   let totalSpend = 0;
@@ -82,7 +82,7 @@ const MyDonut = ({ totals, income, housing, change }) => {
       }
     },
     legend: {
-      show: true,
+      show: legend,
       showForSingleSeries: false,
       showForNullSeries: true,
       showForZeroSeries: true,

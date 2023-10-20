@@ -21,13 +21,14 @@ body {
   border-radius: 5%;
   margin: 1%;
   box-shadow: 0px 0px 0px;
-  max-width: 40%;
+  padding: 4%;
 }
 .basic:hover {
   box-shadow: 3px 3px 3px;
 }
 button {
   font-family: Georgia, 'Times New Roman', Times, serif;
+  min-width: 7em;
   max-width: 75%;
   cursor: pointer;
   border-radius: 10%;
@@ -63,12 +64,12 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
   grid-row: 4;
   grid-column: 2;
   min-height: 5vh;
   margin-top: 1vh;
-  padding: 10%;
+  padding-top: 15vh;
 }
 .downloadButton {
   display: flex;
@@ -120,19 +121,25 @@ button:hover {
 }
 .grid {
   display: grid;
-  grid-template-columns: 33% 33% 33%;
+  grid-template-columns: 32% 33% 32%;
   grid-template-rows: 5% 20% 40% 30%;
   gap: 1%;
   position: absolute;
-  bottom: 0px;
+  top: 1px;
   width: 100vw;
   height: 100vh;
 }
 @media screen and (max-width: 800px) {
+  button {
+    width: 100px;
+  }
   .grid {
     display: flex; /* Switch to Flexbox on mobile */
     flex-direction: column; /* Stack items vertically */
     align-items: center;
+  }
+  .drag-drop-input {
+    padding: 15%;
   }
   .donut {
     width: 90%;
@@ -199,13 +206,6 @@ button:hover {
   font-size: x-large;
   padding: 0%;
 }
-/* .specifics {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  grid-row: 3;
-  grid-column: 1;
-} */
 #nav {
   grid-row: 1;
   grid-column: 2;
@@ -242,11 +242,12 @@ button:hover {
   font-size: large;
 }
 .totals {
-  display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
   grid-row: 3;
   grid-column: 3;
+  text-align: center;
+  font-size: x-large;
 }
 #toggle {
   grid-row: 1;
@@ -267,11 +268,3 @@ button:hover {
   border-color: black;
   padding: 1%;
 }
-/* .tableDiv {
-  position: absolute;
-  top: 0px;
-  border-color: "black";
-  border-width: 2px;
-  background-color: "white";
-} */
-
