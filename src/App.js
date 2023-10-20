@@ -328,7 +328,7 @@ class App extends React.Component {
   }
 
   render() {
-    let inputMessage
+    let inputMessage;
     if (window.screen.width < 768) {
       inputMessage = "Tap to upload CSV file"
     } else {
@@ -348,7 +348,7 @@ class App extends React.Component {
         </div>
       housing = <div>
         <input className='housingInput' name='housing' type='number' placeholder='1500' value={this.state.housing} onChange={this.inputChange}/>
-        <label id='housingLabel' htmlFor='housing'>&emsp;Add Housing Cost</label>
+        <label id='housingLabel' htmlFor='housing'>&emsp;Add Housing</label>
       </div>
     }
     if (this.state.download) {
@@ -380,7 +380,7 @@ class App extends React.Component {
       //   </form>
 
       // download button = button to download the table displayed on screen as a csv file to local device
-      downloadButton = <button onClick={this.handleDownloadCSV}>Download Table</button>
+      downloadButton = <button className='special' onClick={this.handleDownloadCSV}>Download Table</button>
       // Assuming this.state.download contains the CSV string
       table = <div className='table' id='table'>
         <Table className="tableDiv" csv={this.state.download}/>

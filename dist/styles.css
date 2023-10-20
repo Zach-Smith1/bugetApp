@@ -11,11 +11,6 @@ body {
 #altButton:hover {
   box-shadow: 3px 3px 3px;
 }
-.buttonBlock {
-  display: flex;
-  justify-content: center;
-  width: 95%;
-}
 .basic {
   background-image: none;
   border-radius: 5%;
@@ -33,7 +28,7 @@ button {
   cursor: pointer;
   border-radius: 10%;
   margin: 2%;
-  background-image: linear-gradient(to right, #3c9324 0%, #31f9ce 59%, #85f665 100%);
+  background-image: linear-gradient(to left, #85bb65 0%, #0ad081 59%, #a2f58b 100%);
   flex: 1 1 auto;
   padding: 20px;
   transition: 0.5s;
@@ -43,11 +38,8 @@ button {
   box-shadow: 1px 1px 1px rgba(1,0,0,.8);
 }
 button:hover {
+  color: white;
   background-position: right center;
-}
-.csv-html-table table {
-  border-radius: 5px;
-  border-color: black;
 }
 .category {
   position: relative;
@@ -56,9 +48,6 @@ button:hover {
   align-items: center;
   grid-row: 3;
   grid-column: 2;
-}
-.categoryWheel {
-  position: relative;
 }
 .custom {
   display: flex;
@@ -110,13 +99,15 @@ button:hover {
   border-radius: 10em;
   border-width: 10px;
   border-style: solid;
+  color: white;
 }
 .dragMessage {
   position: inherit;
   width: 100%;
 }
 #hover:hover {
-  transform: scale(1.1); /* Make it slightly larger (110% of its original size) */
+  font-style:italic;
+  /* transform: scale(1.1); Make it slightly larger (110% of its original size) */
   background-color: red; /* Change the background color to red */
 }
 .grid {
@@ -224,22 +215,13 @@ button:hover {
   align-items: center;
   grid-row: 2;
   grid-column: 3;
-  font-size: 3vh;
+  font-size: 3.5vh;
 }
 .nameInput {
   font-size: 2vh;
   text-align: center;
   border-width: 0px;
   width: -webkit-fill-available
-}
-#titleLink {
-  color: rgb(0, 0, 0);
-  text-decoration: none;
-  transition-duration: .5s;
-}
-#titleLink:hover {
-  color: blue;
-  font-size: large;
 }
 .totals {
   flex-direction: column;
