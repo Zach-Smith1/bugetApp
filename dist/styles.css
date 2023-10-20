@@ -2,10 +2,29 @@ body {
   background-color: white;
   margin: 0px;
 }
+#altButton {
+  background-image: none;
+  background-color: red;
+  box-shadow: 0px 0px 0px;
+  transition-duration: .5s;
+}
+#altButton:hover {
+  box-shadow: 3px 3px 3px;
+}
 .buttonBlock {
   display: flex;
   justify-content: center;
   width: 95%;
+}
+.basic {
+  background-image: none;
+  border-radius: 5%;
+  margin: 1%;
+  box-shadow: 0px 0px 0px;
+  max-width: 40%;
+}
+.basic:hover {
+  box-shadow: 3px 3px 3px;
 }
 button {
   font-family: Georgia, 'Times New Roman', Times, serif;
@@ -14,13 +33,13 @@ button {
   border-radius: 10%;
   margin: 2%;
   background-image: linear-gradient(to right, #3c9324 0%, #31f9ce 59%, #85f665 100%);
-  transition-duration: 1s;
   flex: 1 1 auto;
   padding: 20px;
   transition: 0.5s;
   background-size: 200% auto;
   color: rgb(15, 0, 0);
   border-radius: 10px;
+  box-shadow: 1px 1px 1px rgba(1,0,0,.8);
 }
 button:hover {
   background-position: right center;
@@ -142,6 +161,36 @@ button:hover {
   left: 0px;
   z-index: 1;
 }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.modal-content {
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: 6px;
+  padding: 4em;
+  max-width: 80%;
+  text-align: center;
+  z-index: 1000;
+}
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
 .myDonut {
   grid-row: 3;
   grid-column: 2;
@@ -202,8 +251,6 @@ button:hover {
 #toggle {
   grid-row: 1;
   grid-column: 1;
-  max-width: fit-content;
-  max-height: min-content;
 }
 .table {
   position: relative;

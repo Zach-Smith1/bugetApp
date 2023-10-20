@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import Table from './table.js';
 import { getSpendingTotals, fineGrainedBreakdown } from './breakdownFns.js';
 import Donut from "./donut.js";
-import MyDonut from "./myDonut.js"
+import MyDonut from "./myDonut.js";
+import Modal from "./Modal.js";
 
 
 class App extends React.Component {
@@ -12,8 +13,10 @@ class App extends React.Component {
     this.state = {
       file: null,
       name: null,
+      clicked: null,
       download: null,
       object: {},
+      edit: false,
       category: null,
       categories: null,
       dragging: false,
@@ -22,6 +25,7 @@ class App extends React.Component {
       income: 0,
       housing: 0,
       savings: 0,
+      isModalOpen: false,
       version: false
     }
   }
@@ -35,9 +39,11 @@ class App extends React.Component {
     }
   }
 
-  remover = (e) => {
+  yesRemove = (e) => {
     e.preventDefault();
-    let nodes = e.target.parentNode.childNodes;
+    this.closeModal();
+    console.log('look here: ', e.target.parentNode)
+    let nodes = this.state.clicked;
     let first = nodes[0].innerHTML;
     let category = nodes[2].innerHTML;
     let amount = nodes[3].innerHTML;
@@ -56,29 +62,48 @@ class App extends React.Component {
             found = true
             nodes.forEach((n) => n.innerHTML = '')
             files.splice(row, 1)
+          }
         }
       }
-    }
     }
     files = files.join('\n');
     this.setState({
       file: files
     })
-    document.getElementById('table').removeEventListener('click', this.remover);
+    this.edit();
+  }
+
+  edit = () => {
+    let edit = this.state.edit
+    if (edit) {
+      this.editOff();
+    } else {
+      this.editOn();
+    }
+    this.setState({
+      edit: !edit
+    })
+  }
+  editOn = () => {
+    document.getElementById('editButton').id = 'altButton';
+    let rows = document.getElementsByClassName('rows');
+    // document.getElementById('table').addEventListener('click', this.openModal);
+    for (let i = 0; i < rows.length; i ++) {
+      rows[i].addEventListener('click', this.openModal);
+      rows[i].id = 'hover';
+    }
+  }
+  editOff = () => {
+    document.getElementById('altButton').id = 'editButton';
     let rows = document.getElementsByClassName('rows');
     for (let i = 0; i < rows.length; i ++) {
+      rows[i].removeEventListener('click', this.openModal);
       rows[i].id = 'none'
     }
   }
-
-  editor = (e) => {
-    e.preventDefault();
-    let rows = document.getElementsByClassName('rows');
-    document.getElementById('table').addEventListener('click', this.remover)
-    console.log(rows);
-    for (let i = 0; i < rows.length; i ++) {
-      rows[i].id = 'hover'
-    }
+  cancelEdit = () => {
+    this.closeModal();
+    this.edit();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -258,6 +283,18 @@ class App extends React.Component {
     })
   }
 
+  openModal = (e) => {
+    this.setState({
+      isModalOpen: true,
+      clicked: e.target.parentNode.childNodes
+    });
+    console.log(e.target.parentNode.childNodes)
+  };
+
+  closeModal = () => {
+    this.setState({ isModalOpen: false });
+  };
+
   versionChange = (e) => {
     e.preventDefault();
     let ver = !this.state.version
@@ -291,7 +328,13 @@ class App extends React.Component {
       </div>
     }
     if (this.state.download) {
-      toggle = <button id='toggle' onClick={this.versionChange}>Toggle Version</button>
+      let toggleName;
+      if (this.state.version) {
+        toggleName = 'Detailed'
+      } else {
+        toggleName = 'Basic'
+      }
+      toggle = <div id='toggle'><button className='basic' onClick={this.versionChange}>{toggleName}</button></div>
       baseGraph = <div className='donut'>
       <Donut version={this.state.version}/>
       </div>
@@ -323,7 +366,7 @@ class App extends React.Component {
       // totals = button that shows all transactions from imported csv file aggregated by type/ category
       totals = <button onClick={this.getFineGrained}>Group by Vendor</button>
       showAll = <button onClick={this.showTotal}>Overview</button>
-      edit = <button onClick={this.editor}>Edit Table</button>
+      edit = <button id='editButton' onClick={this.edit}>Edit Table</button>
     }
 
     return (
@@ -337,6 +380,8 @@ class App extends React.Component {
           <input className ='inputButton' type='file' name='file' onChange={this.importFile} multiple/>
           <label htmlFor='file'></label>
         </div>
+        <div>
+      </div>
         <div className='name'>{name}</div>
         {toggle}
         {baseGraph}
@@ -346,6 +391,14 @@ class App extends React.Component {
         <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>{showAll}{totals}{edit}</div>
         {table}
         <div className='downloadButton'>{downloadButton}</div>
+        <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>
+          <h2>Do you want to remove this item?</h2>
+            <br/>
+          <span>
+          <button className='basic' id='altButton' onClick={this.yesRemove}>Remove</button>
+          <button className='basic' onClick={this.cancelEdit}>Cancel</button>
+          </span>
+        </Modal>
       </div>
     );
   }
