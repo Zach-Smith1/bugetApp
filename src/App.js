@@ -163,13 +163,12 @@ class App extends React.Component {
     e.preventDefault();
   };
 
-
   dragDrop = (e) => {
     e.preventDefault();
     this.setState({
       dragging: false
     })
-    if (e.dataTransfer.files[0].name.slice(-3) !== 'csv') {
+    if (e.dataTransfer.files[0].name.slice(-3).toLowerCase() !== 'csv') {
       alert('Only .csv files currently supported')
     } else {
       this.fileReaderCode(e.dataTransfer.files)
@@ -332,7 +331,7 @@ class App extends React.Component {
     if (window.screen.width < 768) {
       inputMessage = "Tap to upload CSV file"
     } else {
-      inputMessage = <><strong>Drag and Drop Credit Card or Bank Statement(s)</strong><br/> or click to browse</>
+      inputMessage = <><strong>Drag and Drop Credit Card Transaction History</strong><br/> or click to browse</>
     }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
     let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle] = Array(11).fill(null);
