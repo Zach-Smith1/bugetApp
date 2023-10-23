@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import { FileReader } from "react";
 import Table from './table.js';
-import { getSpendingTotals, fineGrainedBreakdown } from './breakdownFns.js';
+import { getSpendingTotals, fineGrainedBreakdown, getColumns } from './breakdownFns.js';
 import Donut from "./donut.js";
 import MyDonut from "./myDonut.js";
 import Modal from "./Modal.js";
@@ -43,7 +43,6 @@ class App extends React.Component {
   yesRemove = (e) => {
     e.preventDefault();
     this.closeModal();
-    console.log('look here: ', e.target.parentNode)
     let nodes = this.state.clicked;
     let first = nodes[0].innerHTML;
     let category = nodes[2].innerHTML;
@@ -53,13 +52,14 @@ class App extends React.Component {
     let files = this.state.file.split('\n')
     let row = 0;
     if (first != 'Transaction Date' && first != 'Category') {
+      let [dateCol, desCol, catCol, numCol] = getColumns(files[0].split(','));
       let found = false;
       console.log(files[0])
       while (found === false && files[row]) {
         row++
         let col = files[row].split(',');
-        if (col[4] == category) {
-          if (col[5] == amount || col[6] == amount * -1) {
+        if (col[catCol] == category) {
+          if (col[numCol] == amount || col[numCol + 1] == amount * -1 || col[numCol] == amount * -1) {
             found = true
             nodes.forEach((n) => n.innerHTML = '')
             files.splice(row, 1)
@@ -181,6 +181,10 @@ class App extends React.Component {
     let readerFiles = '';
     const reader = new window.FileReader();
     const readFile = (f) => {
+      if (!(f instanceof Blob)) {
+        alert('Something went wrong, please try again')
+        return
+      }
       return new Promise((resolve, reject) => {
         const reader = new window.FileReader();
         reader.onload = () => {

@@ -1,17 +1,17 @@
-function getColumns(allColumns) {
+export function getColumns(allColumns) {
   "Transaction Date,Description,Category,Debit\n";
   let [dateCol, desCol, catCol, numCol] = Array(4).fill(0);
   while (allColumns[dateCol] !== 'Transaction Date' && allColumns[dateCol] !== '"Posted Transactions"' && allColumns[dateCol] !== 'Date' && allColumns[dateCol] !== '"Transaction Date"' && dateCol < 10) {
-    dateCol ++
+    dateCol++
   }
   while (allColumns[desCol] !== 'Description' && allColumns[desCol] !== '"Description"' && desCol < 10) {
-    desCol ++
+    desCol++
   }
   while (allColumns[catCol] !== 'Category' && allColumns[catCol] !== '"Category"' && catCol < 10) {
-    catCol ++
+    catCol++
   }
-  while (allColumns[numCol] !== 'Amount' && allColumns[numCol] !== '"Amount"' && allColumns[numCol] !== 'Debit' && numCol < 10) {
-    numCol ++
+  while (allColumns[numCol] !== 'Amount' && allColumns[numCol] !== '"Amount"' && allColumns[numCol] !== 'Debit' && allColumns[numCol] !== 'Amount (USD)' && numCol < 10) {
+    numCol++
   }
   return [dateCol, desCol, catCol, numCol]
 }
@@ -22,7 +22,7 @@ export function getSpendingTotals(file, category) {
   let colRow = 0;
   let card = 'unknown';
   while (!allRows[colRow].split(',').includes('Description') && !allRows[colRow].split(',').includes('"Description"')) {
-    colRow ++
+    colRow++
   }
   const columnNames = allRows[colRow].split(',')
   if (columnNames[6] === 'Memo') {
@@ -31,7 +31,7 @@ export function getSpendingTotals(file, category) {
 
   let [dateCol, desCol, catCol, numCol] = getColumns(columnNames);
 
-  allRows = allRows.slice(colRow +1);
+  allRows = allRows.slice(colRow + 1);
   // create output object for this function to return
   const totals = {};
   // boolean variable to keep track of adding column names to output file
@@ -40,18 +40,26 @@ export function getSpendingTotals(file, category) {
   allRows.forEach((row) => {
     let rowArr = row.split(',');
     // if row is blank or if multiple files have caused there to be a header row in the middle (rowArr[3] === Description), skip row
-    if (rowArr[3] === 'Description' || rowArr[catCol] === undefined || rowArr[3].slice(0,11) === "CAPITAL ONE") {
+    if (rowArr[3] === 'Description' || rowArr[catCol] === undefined || rowArr[3].slice(0, 11) === "CAPITAL ONE") {
       return
     }
     // if there's a credit change it to a negative debit (for Capital One)
     if (rowArr[numCol + 1] > 0 && columnNames[6] === 'Credit') {
-      rowArr[numCol] = '-'+rowArr[6]
+      rowArr[numCol] = '-' + rowArr[6]
+    }
+    let rowObj = {};
+
+    let number = rowArr[numCol]
+    if (number.includes('"')) number = number.replace(/"/g, '');
+    // account for chase card negative amounts:
+    if (card === 'Chase') {
+      if (rowArr[catCol] === '') {
+        return
+      }
+      number = number * -1
     }
 
-    let rowObj = {};
-    // pair column names and values as key value pairs
-
-    for (let i = Math.min(catCol,numCol); i <= Math.max(catCol,numCol); i++) {
+    for (let i = Math.min(catCol, numCol); i <= Math.max(catCol, numCol); i++) {
       // logs relevant data for category in question
       if (category && rowArr[i] === category) {
         // console.log(rowArr[i - 1], rowArr[i + 1])
@@ -59,29 +67,11 @@ export function getSpendingTotals(file, category) {
           finalCsv = "Transaction Date,Description,Category,Debit\n";
           head = false
         }
-        let number = rowArr[numCol];
-        if (card === 'Chase') {
-          number *= -1
-        }
         finalCsv += `${rowArr[dateCol]},${rowArr[desCol]},${rowArr[catCol]},${number}\n`;
       }
       rowObj[columnNames[i]] = rowArr[i];
-  }
-  // account for chase card $ in amount in Bard Generated Data
-  // let unit = rowArr[numCol].indexOf('$')
-  // if (unit > -1) {
-    //   number = number.replace(/\$/g, '')
-    //   number = number.replace(/"/g, '')
-    // }
-    // account for chase card negative amounts:
-    let number = rowArr[numCol]
-
-  if (card === 'Chase') {
-    if (rowArr[catCol] === '') {
-      return
     }
-    number = number * -1
-  }
+
 
     /* each row of is represented as key value pair in the final object, the key is the item number, the value
      is an object of column names (keys) and values */
@@ -102,24 +92,19 @@ export function getSpendingTotals(file, category) {
     finalCsv += rows;
   }
   //return totals as csv with header added and as an object (to use keys for category selector wheel)
-  return ["Category, $ Spent\n"+finalCsv,totals]
+  return ["Category, $ Spent\n" + finalCsv, totals]
 }
 
 export function fineGrainedBreakdown(file) {
   console.log(`fineGrainedBreakdown is parsing payments...`);
-  // split raw data into rows
   let allRows = file.split('\n')
   if (allRows[0].split(',').length < 3) {
     alert("Something went wrong, already Grouped!")
     return null
   }
-  // const columnNames = allRows[0].split(',');
-
   allRows = allRows.slice(1);
-
+  const [desCol, numCol] = [1, 3];
   const totals = {};
-
-  let [desCol, numCol] = [1, 3];
 
   // check for numbers in establishment names and remove them to make a common name
   let numbers = ['#', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
@@ -128,7 +113,9 @@ export function fineGrainedBreakdown(file) {
     let rowArr = row.split(',');
     if (rowArr[desCol] === undefined) return
     let name = rowArr[desCol];
-    name = name.includes('_') ? name.split('_') : name.includes('*') ? name.split('*') : name.split(' ');
+    name = name.replace(/_/g, ' ');
+    name = name.replace(/\*/g, ' ');
+    name = name.split(' ');
     let simpleName = [name[0]];
     for (let i = 1; i < name.length; i++) {
       finder = true;
@@ -142,7 +129,6 @@ export function fineGrainedBreakdown(file) {
     }
     simpleName = simpleName.join(' ');
     let number = rowArr[numCol]
-
     if (totals.hasOwnProperty(simpleName)) {
       totals[simpleName] += Number(number)
     } else {
