@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-// import { FileReader } from "react";
+const XLSX = require('xlsx');
 import Table from './table.js';
 import { getSpendingTotals, fineGrainedBreakdown, getColumns } from './breakdownFns.js';
 import Donut from "./donut.js";
 import MyDonut from "./myDonut.js";
 import Modal from "./Modal.js";
-
 
 class App extends React.Component {
   constructor(props) {
@@ -51,14 +50,16 @@ class App extends React.Component {
     totals[category] -= amount;
     let files = this.state.file.split('\n')
     let row = 0;
+    while (!files[row].includes('Description') && !files[row].includes('"Description"')) {
+      row++
+    }
     if (first != 'Transaction Date' && first != 'Category') {
-      let [dateCol, desCol, catCol, numCol] = getColumns(files[0].split(','));
+      let [dateCol, desCol, catCol, numCol] = getColumns(files[row].split(','));
       let found = false;
-      console.log(files[0])
       while (found === false && files[row]) {
         row++
         let col = files[row].split(',');
-        if (col[catCol] == category) {
+        if (col[catCol] == category || col[catCol].split('-')[0] == category /* split for shortened amex names*/) {
           if (col[numCol] == amount || col[numCol + 1] == amount * -1 || col[numCol] == amount * -1) {
             found = true
             nodes.forEach((n) => n.innerHTML = '')
@@ -163,30 +164,91 @@ class App extends React.Component {
     e.preventDefault();
   };
 
-  dragDrop = (e) => {
+  sheetObjectToCSV = (obj) => { // handmade to convert amex xlsx to csv
+    let csv = '';
+    for (const row in obj) {
+      let csvRow = '';
+      for (const col in obj[row]) {
+        let data = obj[row][col]
+        if (typeof data !== 'number') {
+          data = data.replace(/\n/g, '')
+          data = data.replace(/\r/g, '')
+          data = data.replace(/,/g, ' ')
+          data = data.replace(/&/g, '+') // fixes issue where amex data & --> &amp
+        }
+        csvRow += data + ','
+      }
+      csv += csvRow.slice(0,-1) + '\n'
+    }
+    return csv
+  }
+
+  dragDrop = async (e) => {
     e.preventDefault();
     this.setState({
       dragging: false
-    })
-    if (e.dataTransfer.files[0].name.slice(-3).toLowerCase() !== 'csv') {
-      alert('Only .csv files currently supported')
-    } else {
-      this.fileReaderCode(e.dataTransfer.files)
+    });
+
+    let files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.name.slice(-4).toLowerCase()  === 'xlsx'){
+        const workbook = await this.readFileAsync(file);
+        if (workbook) {
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const obj = XLSX.utils.sheet_to_json(sheet);
+          const csv = this.sheetObjectToCSV(obj);
+          this.setState({
+            file: csv,
+            name: file.name,
+            category: null
+          })
+          return
+        } else {
+          // Handle error if the workbook is not read successfully
+        }
+      } else if (file.name.slice(-3).toLowerCase()  !== 'csv') {
+        alert('Only .csv and .xlsx files are currently supported');
+      } else {
+        this.fileReaderCode(files);
+      }
     }
   };
+
+  readFileAsync = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const arrayBuffer = e.target.result;
+          // console.log(arrayBuffer)
+          const workbook = XLSX.read(arrayBuffer);
+          resolve(workbook);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
 
   fileReaderCode = (input) => {
     let files = input;
     let file, name;
     let readerFiles = '';
-    const reader = new window.FileReader();
+    const reader = new FileReader();
     const readFile = (f) => {
       if (!(f instanceof Blob)) {
         alert('Something went wrong, please try again')
         return
       }
       return new Promise((resolve, reject) => {
-        const reader = new window.FileReader();
+        const reader = new FileReader();
         reader.onload = () => {
           readerFiles += reader.result;
           this.setState({
@@ -299,7 +361,6 @@ class App extends React.Component {
       isModalOpen: true,
       clicked: e.target.parentNode.childNodes
     });
-    console.log(e.target.parentNode.childNodes)
   };
 
   closeModal = () => {

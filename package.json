@@ -31,7 +31,8 @@
     "style-loader": "^3.3.1",
     "util": "^0.12.5",
     "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",

@@ -1,16 +1,16 @@
 export function getColumns(allColumns) {
   "Transaction Date,Description,Category,Debit\n";
   let [dateCol, desCol, catCol, numCol] = Array(4).fill(0);
-  while (allColumns[dateCol] !== 'Transaction Date' && allColumns[dateCol] !== '"Posted Transactions"' && allColumns[dateCol] !== 'Date' && allColumns[dateCol] !== '"Transaction Date"' && dateCol < 10) {
+  while (allColumns[dateCol] !== 'Transaction Date' && allColumns[dateCol] !== '"Posted Transactions"' && allColumns[dateCol] !== 'Date' && allColumns[dateCol] !== '"Transaction Date"' && dateCol < 14) {
     dateCol++
   }
-  while (allColumns[desCol] !== 'Description' && allColumns[desCol] !== '"Description"' && desCol < 10) {
+  while (allColumns[desCol] !== 'Description' && allColumns[desCol] !== '"Description"' && desCol < 14) {
     desCol++
   }
-  while (allColumns[catCol] !== 'Category' && allColumns[catCol] !== '"Category"' && catCol < 10) {
+  while (allColumns[catCol] !== 'Category' && allColumns[catCol] !== '"Category"' && catCol < 14) {
     catCol++
   }
-  while (allColumns[numCol] !== 'Amount' && allColumns[numCol] !== '"Amount"' && allColumns[numCol] !== 'Debit' && allColumns[numCol] !== 'Amount (USD)' && numCol < 10) {
+  while (allColumns[numCol] !== 'Amount' && allColumns[numCol] !== '"Amount"' && allColumns[numCol] !== 'Debit' && allColumns[numCol] !== 'Amount (USD)' && numCol < 14) {
     numCol++
   }
   return [dateCol, desCol, catCol, numCol]
@@ -37,10 +37,11 @@ export function getSpendingTotals(file, category) {
   // boolean variable to keep track of adding column names to output file
   let head = true;
   let finalCsv = '';
+  let lastrow = ''
   allRows.forEach((row) => {
     let rowArr = row.split(',');
     // if row is blank or if multiple files have caused there to be a header row in the middle (rowArr[3] === Description), skip row
-    if (rowArr[3] === 'Description' || rowArr[catCol] === undefined || rowArr[3].slice(0, 11) === "CAPITAL ONE") {
+    if (rowArr[3] === 'Description' || rowArr[catCol] === undefined || rowArr[catCol].length === 0 || rowArr[3].slice(0, 11) === "CAPITAL ONE") {
       return
     }
     // if there's a credit change it to a negative debit (for Capital One)
@@ -50,6 +51,7 @@ export function getSpendingTotals(file, category) {
     let rowObj = {};
 
     let number = rowArr[numCol]
+
     if (number.includes('"')) number = number.replace(/"/g, '');
     // account for chase card negative amounts:
     if (card === 'Chase') {
@@ -59,10 +61,16 @@ export function getSpendingTotals(file, category) {
       number = number * -1
     }
 
+    lastrow = rowArr
+
     for (let i = Math.min(catCol, numCol); i <= Math.max(catCol, numCol); i++) {
       // logs relevant data for category in question
+      if (i === catCol) {
+        if (rowArr[i].includes('-')) { // for amex category names (too many & too long)
+          rowArr[i] = rowArr[i].split('-')[0]
+        }
+      }
       if (category && rowArr[i] === category) {
-        // console.log(rowArr[i - 1], rowArr[i + 1])
         if (head === true) {
           finalCsv = "Transaction Date,Description,Category,Debit\n";
           head = false
@@ -75,10 +83,11 @@ export function getSpendingTotals(file, category) {
 
     /* each row of is represented as key value pair in the final object, the key is the item number, the value
      is an object of column names (keys) and values */
-    if (totals.hasOwnProperty(rowObj[columnNames[catCol]])) {
-      totals[rowObj[columnNames[catCol]]] += Number(number)
+    let catColumn = rowObj[columnNames[catCol]]
+    if (totals.hasOwnProperty(catColumn)) {
+      totals[catColumn] += Number(number)
     } else {
-      totals[rowObj[columnNames[catCol]]] = Number(number)
+      totals[catColumn] = Number(number)
     }
   })
   // if getting specific category breakdown return (only spending from that category)
