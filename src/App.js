@@ -131,11 +131,13 @@ class App extends React.Component {
       console.log('file change')
     }
     if (prevState.category !== this.state.category) {
-      let totals = getSpendingTotals(this.state.file, this.state.category);
-      this.setState({
-        download: totals
-      })
-      console.log('category change')
+      if (this.state.category !== null) { // prevents crash when changing base file (which changes category back to null)
+        let totals = getSpendingTotals(this.state.file, this.state.category);
+        this.setState({
+          download: totals
+        })
+        console.log('category change')
+      }
     }
     // this code is so that the name input box doesn't disappear if you delete all the text
     if (this.state.name === '') {
@@ -206,7 +208,7 @@ class App extends React.Component {
           })
           return
         } else {
-          // Handle error if the workbook is not read successfully
+          alert('Oops, error reading workbook')
         }
       } else if (file.name.slice(-3).toLowerCase()  !== 'csv') {
         alert('Only .csv and .xlsx files are currently supported');
@@ -236,12 +238,18 @@ class App extends React.Component {
     });
   };
 
+  // removes new lines and extra commas from between double quotes, maintaining row format
+  removeLineBreaksInQuotes = (input) => {
+    return input.replace(/"([^"]*)"/g, (match, content) => {
+      content = content.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/,/g, '');
+      return `"${content}"`;
+    });
+  };
 
   fileReaderCode = (input) => {
     let files = input;
     let file, name;
     let readerFiles = '';
-    const reader = new FileReader();
     const readFile = (f) => {
       if (!(f instanceof Blob)) {
         alert('Something went wrong, please try again')
@@ -251,6 +259,7 @@ class App extends React.Component {
         const reader = new FileReader();
         reader.onload = () => {
           readerFiles += reader.result;
+          readerFiles = this.removeLineBreaksInQuotes(readerFiles);
           this.setState({
             file: readerFiles,
             name: name,
@@ -263,15 +272,6 @@ class App extends React.Component {
         reader.readAsText(f);
       });
     };
-    reader.onload = () => {
-      readerFiles += reader.result;
-      this.setState({
-        file: readerFiles,
-        name: name,
-        category: null
-      })
-    };
-
     if (files[1] !== undefined) {
       for (const file of files) {
         const handleFileChange = async (f) => {

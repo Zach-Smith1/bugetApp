@@ -32,14 +32,13 @@ export function getSpendingTotals(file, category) {
   let [dateCol, desCol, catCol, numCol] = getColumns(columnNames);
 
   allRows = allRows.slice(colRow + 1);
-  // create output object for this function to return
   const totals = {};
-  // boolean variable to keep track of adding column names to output file
-  let head = true;
+  let head = true; // boolean variable to keep track of adding column names to output file
   let finalCsv = '';
-  let lastrow = ''
+
   allRows.forEach((row) => {
     let rowArr = row.split(',');
+
     // if row is blank or if multiple files have caused there to be a header row in the middle (rowArr[3] === Description), skip row
     if (rowArr[3] === 'Description' || rowArr[catCol] === undefined || rowArr[catCol].length === 0 || rowArr[3].slice(0, 11) === "CAPITAL ONE") {
       return
@@ -60,8 +59,6 @@ export function getSpendingTotals(file, category) {
       }
       number = number * -1
     }
-
-    lastrow = rowArr
 
     for (let i = Math.min(catCol, numCol); i <= Math.max(catCol, numCol); i++) {
       // logs relevant data for category in question
