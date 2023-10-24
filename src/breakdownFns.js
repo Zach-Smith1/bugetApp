@@ -113,7 +113,8 @@ export function fineGrainedBreakdown(file) {
   const totals = {};
 
   // check for numbers in establishment names and remove them to make a common name
-  let numbers = ['#', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  let prefixes = ['pp', 'tst', 'sq', 'aplpay']
   let finder = true;
   allRows.forEach((row) => {
     let rowArr = row.split(',');
@@ -121,7 +122,9 @@ export function fineGrainedBreakdown(file) {
     let name = rowArr[desCol];
     name = name.replace(/_/g, ' ');
     name = name.replace(/\*/g, ' ');
+    name = name.replace(/#/g, ' ');
     name = name.split(' ');
+    if (prefixes.includes(name[0].toLowerCase())) name.shift()
     let simpleName = [name[0]];
     for (let i = 1; i < name.length; i++) {
       finder = true;
@@ -133,6 +136,8 @@ export function fineGrainedBreakdown(file) {
       }
       if (finder) simpleName.push(name[i]);
     }
+    simpleName = simpleName.filter((word) => word !== '');
+    if (simpleName[0] == 'CHEVRON') console.log(simpleName.join(' '))
     simpleName = simpleName.join(' ');
     let number = rowArr[numCol]
     if (totals.hasOwnProperty(simpleName)) {
