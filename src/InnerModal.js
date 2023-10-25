@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InnerModal = ({ isOpen, closeModal, children }) => {
+const Modal = ({ isOpen, closeModal, children }) => {
   if (!isOpen) {
     return null;
   }
@@ -17,4 +17,4 @@ const InnerModal = ({ isOpen, closeModal, children }) => {
   );
 };
 
-export default InnerModal;
+export default Modal;

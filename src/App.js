@@ -5,6 +5,7 @@ import { getSpendingTotals, fineGrainedBreakdown, getColumns } from './breakdown
 import Donut from "./donut.js";
 import MyDonut from "./myDonut.js";
 import Modal from "./Modal.js";
+import InnerModal from "./InnerModal.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class App extends React.Component {
       edit: false,
       legend: true,
       category: null,
-      categories: null,
+      rowCategory: '______',
       dragging: false,
       show: 'none',
       series: [1, 2, 3, 0, 5, 6, 7, 8],
@@ -26,6 +27,7 @@ class App extends React.Component {
       housing: 0,
       savings: 0,
       isModalOpen: false,
+      isInnerModalOpen: false,
       version: false
     }
   }
@@ -38,8 +40,60 @@ class App extends React.Component {
       })
     }
   }
+  setRowCategory = (e) => {
+    let val = e.target.value
+    this.setState({
+      rowCategory: val
+    })
 
-  yesRemove = (e) => {
+  }
+
+  changeRowCategory = (e) => {
+    e.preventDefault();
+    if (this.state.rowCategory === '') {
+      alert('No Category Selected');
+    }
+    this.closeModal();
+    let nodes = this.state.clicked;
+    let first = nodes[0].innerHTML;
+    let category = nodes[2].innerHTML;
+    let amount = nodes[3].innerHTML;
+    let totals = { ...this.state.object };
+    totals[category] -= amount;
+    let files = this.state.file.split('\n')
+    let row = 0;
+    while (!files[row].includes('Description') && !files[row].includes('"Description"')) {
+      row++
+    }
+    if (first != 'Transaction Date' && first != 'Category') {
+      let [dateCol, desCol, catCol, numCol] = getColumns(files[row].split(','));
+      let found = false;
+      while (found === false && files[row]) {
+        row++
+        let col = files[row].split(',');
+        if (col[catCol] == category || col[catCol].split('-')[0] == category /* split for shortened amex names*/) {
+          if (col[numCol] == amount || col[numCol + 1] == amount * -1 || col[numCol] == amount * -1) {
+            found = true
+            nodes.forEach((n) => n.innerHTML = '')
+            console.log('category',this.state.rowCategory)
+            console.log('row before', files[row][catCol])
+            files[row] = files[row].split(',')
+            files[row][catCol] = this.state.rowCategory
+            files[row] = files[row].join(',')
+            console.log('row after',files[row][catCol])
+          }
+        }
+      }
+    }
+    files = files.join('\n');
+    this.setState({
+      file: files
+    })
+    this.edit();
+    this.closeInnerModal();
+  }
+
+  removeRow = (e) => {
     e.preventDefault();
     this.closeModal();
     let nodes = this.state.clicked;
@@ -240,6 +294,7 @@ class App extends React.Component {
 
   // removes new lines and extra commas from between double quotes, maintaining row format
   removeLineBreaksInQuotes = (input) => {
+    input = input.replace(/&/g, '+') // fixes issue where amex data & --> &amp
     return input.replace(/"([^"]*)"/g, (match, content) => {
       content = content.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/,/g, '');
       return `"${content}"`;
@@ -357,6 +412,10 @@ class App extends React.Component {
   }
 
   openModal = (e) => {
+    e.target.parentNode.childNodes.forEach((col) => {
+      col.className = 'clicked';
+    }
+      )
     this.setState({
       isModalOpen: true,
       clicked: e.target.parentNode.childNodes
@@ -364,7 +423,21 @@ class App extends React.Component {
   };
 
   closeModal = () => {
+    let row = document.getElementsByClassName('clicked');
+    for (let i = 0; i < row.length; i++) {
+      row[i].id = 'unclicked';
+    }
     this.setState({ isModalOpen: false });
+  };
+
+  openInnerModal = () => {
+    this.setState({
+      isInnerModalOpen: true,
+    });
+  };
+
+  closeInnerModal = () => {
+    this.setState({ isInnerModalOpen: false });
   };
 
   versionChange = (e) => {
@@ -400,6 +473,11 @@ class App extends React.Component {
     }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
     let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle] = Array(11).fill(null);
+    let list = Object.keys(this.state.object);
+      let all = [<option key='base' value=''>Select Category</option>];
+      list.forEach((cat) => {
+        all.push(<option key={cat} value={cat}>{cat}</option>)
+      })
     if (this.state.name) {
       // name = name of imported file
       name = <div>
@@ -407,12 +485,12 @@ class App extends React.Component {
         <input className='nameInput' name='name' type='text' placeholder='a' value={this.state.name} onChange={this.inputChange}/>
       </div>
       income = <div>
-        <input className='incomeInput' name='income' type='number' placeholder='3000' value={this.state.income} onChange={this.inputChange}/>
-        <label id='incomeLabel' htmlFor='income'>&emsp;Add Income</label>
+        <input className='incomeInput' name='income' type='number' placeholder='$' onChange={this.inputChange}/>
+        <label id='incomeLabel' htmlFor='income'>&emsp;Add Income to Calculate Savings</label>
         </div>
       housing = <div>
-        <input className='housingInput' name='housing' type='number' placeholder='1500' value={this.state.housing} onChange={this.inputChange}/>
-        <label id='housingLabel' htmlFor='housing'>&emsp;Add Housing</label>
+        <input className='housingInput' name='housing' type='number' placeholder='$' onChange={this.inputChange}/>
+        <label id='housingLabel' htmlFor='housing'>&emsp;Add Housing Cost</label>
       </div>
     }
     if (this.state.download) {
@@ -428,20 +506,6 @@ class App extends React.Component {
       </div>
       myGraph = <div className='myDonut'>
         <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')} change={this.addCategory} legend={this.state.legend}/></div>
-      let list = Object.keys(this.state.object);
-      let all = [<option key='base' value={null}>All</option>];
-      list.forEach((cat) => {
-        all.push(<option key={cat} value={cat}>{cat}</option>)
-      })
-
-      // **** DEPRECATED***** selector dropdown wheel of all payment categories from initial csv file
-      // category =
-      // <form>
-      //     <select className='categoryWheel' name="category" onChange={this.addCategory}>
-      //       {all}
-      //     </select>
-      //     <label id='categoryLabel' htmlFor='category'>&emsp;Show</label>
-      //   </form>
 
       // download button = button to download the table displayed on screen as a csv file to local device
       downloadButton = <button className='special' onClick={this.handleDownloadCSV}>Download Table</button>
@@ -485,10 +549,24 @@ class App extends React.Component {
           <h2>Do you want to remove this item?</h2>
             <br/>
           <span>
-          <button className='basic' id='altButton' onClick={this.yesRemove}>Remove</button>
-          <button className='basic' onClick={this.cancelEdit}>Cancel</button>
+          <button className='basic' id='altButton' onClick={this.removeRow}>Remove</button>
+          <button className='basic' style={{'backgroundColor': 'orange'}} onClick={this.openInnerModal}>Change Category</button>
+          <button className='basic' style={{'backgroundColor': 'green'}} onClick={this.cancelEdit}>Cancel</button>
           </span>
         </Modal>
+        <InnerModal isOpen={this.state.isInnerModalOpen} closeModal={this.closeInnerModal}>
+          <h2>Move item from {this.state.category} to {this.state.rowCategory}</h2>
+            <br/>
+       <form>
+           <select className='categoryWheel' name="category" onChange={this.setRowCategory}>
+             {all}
+           </select>
+           <label id='categoryLabel' htmlFor='category'>&emsp;Or&emsp;</label>
+           <input className='categoryInput' name='rowCategory' type='text' placeholder='Enter Custom Category' onChange={this.inputChange} maxLength="40"/>
+           <br/>
+           <button className='basic' onClick={this.changeRowCategory}>Move</button>
+         </form>
+        </InnerModal>
       </div>
     );
   }
