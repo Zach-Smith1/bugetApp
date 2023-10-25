@@ -555,17 +555,18 @@ class App extends React.Component {
           </span>
         </Modal>
         <InnerModal isOpen={this.state.isInnerModalOpen} closeModal={this.closeInnerModal}>
-          <h2>Move item from {this.state.category} to {this.state.rowCategory}</h2>
+          <div className='innerModalOptions'>
+          <p>Move item from <b>{this.state.category}</b> to <br/><strong>{this.state.rowCategory}</strong></p>
+            <select className='categoryWheel' name="category" onChange={this.setRowCategory}>
+              {all}
+            </select>
             <br/>
-       <form>
-           <select className='categoryWheel' name="category" onChange={this.setRowCategory}>
-             {all}
-           </select>
-           <label id='categoryLabel' htmlFor='category'>&emsp;Or&emsp;</label>
-           <input className='categoryInput' name='rowCategory' type='text' placeholder='Enter Custom Category' onChange={this.inputChange} maxLength="40"/>
-           <br/>
-           <button className='basic' onClick={this.changeRowCategory}>Move</button>
-         </form>
+            <label id='categoryLabel' htmlFor='category'>Or</label>
+            <br/>
+            <input className='categoryInput' name='rowCategory' type='text' placeholder='Enter Custom Category' onChange={this.inputChange} maxLength="40" />
+            <button className='basic' onClick={this.changeRowCategory}>Move</button>
+          </div>
+
         </InnerModal>
       </div>
     );

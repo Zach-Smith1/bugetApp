@@ -2,6 +2,9 @@ body {
   background-color: white;
   margin: 0px;
 }
+p {
+ font-size: x-large;
+}
 #altButton {
   background-image: none;
   background-color: red;
@@ -12,6 +15,7 @@ body {
   box-shadow: 3px 3px 3px;
 }
 .basic {
+  color: black;
   background-image: none;
   border-radius: 5%;
   margin: 1%;
@@ -20,6 +24,7 @@ body {
   padding: 4%;
 }
 .basic:hover {
+  color: #383838;
   box-shadow: 3px 3px 3px;
 }
 button {
@@ -113,7 +118,6 @@ button:hover {
   background-color: transparent;
 }
 #hover:hover {
-  font-style:italic;
   /* transform: scale(1.1); Make it slightly larger (110% of its original size) */
   background-color: red; /* Change the background color to red */
 }
@@ -190,9 +194,9 @@ button:hover {
 }
 .modal-close-button {
   position: relative;
-  top: -1em;
-  right: -12em;
+  left: 55%;
   background: none;
+  padding: 0%;
   border: none;
   font-size: 20px;
   cursor: pointer;
@@ -200,6 +204,12 @@ button:hover {
 }
 .modal-close-button:hover {
   color: black;
+}
+.innerModalOptions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .myDonut {
   grid-row: 3;
