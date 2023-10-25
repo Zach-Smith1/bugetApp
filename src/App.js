@@ -546,7 +546,7 @@ class App extends React.Component {
         {table}
         <div className='downloadButton'>{downloadButton}</div>
         <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>
-          <h2>Do you want to remove this item?</h2>
+          <h2>What do you want to do with this item?</h2>
             <br/>
           <span>
           <button className='basic' id='altButton' onClick={this.removeRow}>Remove</button>
