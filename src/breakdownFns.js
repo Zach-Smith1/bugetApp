@@ -69,10 +69,10 @@ export function getSpendingTotals(file, category) {
       }
       if (category && rowArr[i] === category) {
         if (head === true) {
-          finalCsv = "Transaction Date,Description,Category,Debit\n";
+          finalCsv = "Transaction Date,Description,Charge,Category\n";
           head = false
         }
-        finalCsv += `${rowArr[dateCol]},${rowArr[desCol]},${rowArr[catCol]},${number}\n`;
+        finalCsv += `${rowArr[dateCol]},${rowArr[desCol]},${number},${rowArr[catCol]}\n`;
       }
       rowObj[columnNames[i]] = rowArr[i];
     }
@@ -109,7 +109,7 @@ export function fineGrainedBreakdown(file) {
     return null
   }
   allRows = allRows.slice(1);
-  const [desCol, numCol] = [1, 3];
+  const [desCol, numCol] = [1, 2];
   const totals = {};
 
   // check for numbers in establishment names and remove them to make a common name

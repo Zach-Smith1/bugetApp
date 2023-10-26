@@ -258,18 +258,24 @@ button:hover {
   grid-row: 1;
   grid-column: 1;
 }
+.tableBox {
+  display: flex;
+  justify-content: center;
+  grid-row: 4;
+  grid-column: 1;
+}
 .table {
   position: relative;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   overflow-y: scroll;
-  grid-row: 4;
-  grid-column: 1;
   margin: 1%;
+  max-width: fit-content;
   border-radius: 1em;
   border-width: 5px;
   border-style: double;
   border-color: black;
   padding: 1%;
+  transition-duration: 1s;
 }

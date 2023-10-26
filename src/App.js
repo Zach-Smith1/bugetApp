@@ -56,8 +56,8 @@ class App extends React.Component {
     this.closeModal();
     let nodes = this.state.clicked;
     let first = nodes[0].innerHTML;
-    let category = nodes[2].innerHTML;
-    let amount = nodes[3].innerHTML;
+    let category = nodes[3].innerHTML;
+    let amount = nodes[2].innerHTML;
     let totals = { ...this.state.object };
     totals[category] -= amount;
     let files = this.state.file.split('\n')
@@ -98,8 +98,8 @@ class App extends React.Component {
     this.closeModal();
     let nodes = this.state.clicked;
     let first = nodes[0].innerHTML;
-    let category = nodes[2].innerHTML;
-    let amount = nodes[3].innerHTML;
+    let category = nodes[3].innerHTML;
+    let amount = nodes[2].innerHTML;
     let totals = { ...this.state.object };
     totals[category] -= amount;
     let files = this.state.file.split('\n')
@@ -543,7 +543,7 @@ class App extends React.Component {
         <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>
           <span>{showAll}{totals}{edit}</span>
         </div>
-        {table}
+        <div className='tableBox'>{table}</div>
         <div className='downloadButton'>{downloadButton}</div>
         <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>
           <h2>What do you want to do with this item?</h2>
