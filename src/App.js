@@ -294,7 +294,7 @@ class App extends React.Component {
 
   // removes new lines and extra commas from between double quotes, maintaining row format
   removeLineBreaksInQuotes = (input) => {
-    input = input.replace(/&/g, '+') // fixes issue where amex data & --> &amp
+    input = input.replace(/&/g, '+').replace(/\r/g, '') // fixes carriage returns and issue where amex data & --> &amp
     return input.replace(/"([^"]*)"/g, (match, content) => {
       content = content.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/,/g, '');
       return `"${content}"`;

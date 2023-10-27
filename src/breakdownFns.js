@@ -97,6 +97,7 @@ export function getSpendingTotals(file, category) {
     // store as csv formatted string
     finalCsv += rows;
   }
+
   //return totals as csv with header added and as an object (to use keys for category selector wheel)
   return ["Category, $ Spent\n" + finalCsv, totals]
 }
@@ -137,7 +138,6 @@ export function fineGrainedBreakdown(file) {
       if (finder) simpleName.push(name[i]);
     }
     simpleName = simpleName.filter((word) => word !== '');
-    if (simpleName[0] == 'CHEVRON') console.log(simpleName.join(' '))
     simpleName = simpleName.join(' ');
     let number = rowArr[numCol]
     if (totals.hasOwnProperty(simpleName)) {
