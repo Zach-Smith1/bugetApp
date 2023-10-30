@@ -488,7 +488,7 @@ class App extends React.Component {
       inputMessage = <><strong>Drag and Drop Credit Card Transaction History</strong><br/> or click to browse</>
     }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
-    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle] = Array(11).fill(null);
+    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle, toolsPlaceholder] = Array(12).fill(null);
     let list = Object.keys(this.state.object);
       let all = [<option key='base' value=''>Select Category</option>];
       list.forEach((cat) => {
@@ -510,6 +510,12 @@ class App extends React.Component {
       </div>
     }
     if (this.state.download) {
+      toolsPlaceholder = <div className='totals' style={{ display: this.state.show === 'none' ? 'inline' : 'none' }}>
+        <br/>
+        <p style={{'color':'grey'}}>
+        Choose Category to Show Options
+        </p>
+      </div>
       let toggleName;
       if (this.state.version) {
         toggleName = 'Detailed'
@@ -559,6 +565,7 @@ class App extends React.Component {
         <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>
           <span>{showAll}{totals}{edit}</span>
         </div>
+        {toolsPlaceholder}
         <div className='tableBox'>{table}</div>
         <div className='downloadButton'>{downloadButton}</div>
         <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>
