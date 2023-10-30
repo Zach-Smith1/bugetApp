@@ -394,11 +394,27 @@ class App extends React.Component {
     link.click();
   };
 
-  importFile = (e) => {
-    if (e.target.files[0].name.slice(-3) !== 'csv') {
-      alert('Only .csv files currently supported')
+  importFile = async (e) => {
+    let files = e.target.files;
+    let file = files[0]
+    if (files[0].name.slice(-4).toLowerCase() === 'xlsx') {
+      const workbook = await this.readFileAsync(file);
+      if (workbook) {
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const obj = XLSX.utils.sheet_to_json(sheet);
+        const csv = this.sheetObjectToCSV(obj);
+        this.setState({
+          file: csv,
+          name: file.name,
+          category: null
+        })
+        return
+      }
+    } else if (e.target.files[0].name.slice(-3).toLowerCase() === 'csv') {
+      this.fileReaderCode(files)
     } else {
-      this.fileReaderCode(e.target.files)
+      alert('Only .csv and .xlsx files currently supported')
     }
   }
 

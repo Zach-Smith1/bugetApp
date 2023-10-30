@@ -37,12 +37,12 @@ class Table extends React.Component {
     return (
       <table>
         <thead>
-          <tr>
+
             {tableData.length > 0 &&
               Object.keys(tableData[0]).map((column) => (
                 <th key={column}>{column}</th>
               ))}
-          </tr>
+
         </thead>
         <tbody>
           {tableData.map((row, rowIndex) => (

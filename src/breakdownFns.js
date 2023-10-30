@@ -25,7 +25,7 @@ export function getSpendingTotals(file, category) {
     colRow++
   }
   const columnNames = allRows[colRow].split(',')
-  if (columnNames[6] === 'Memo') {
+  if (columnNames[columnNames.length - 1] === 'Memo') { // if last column name is memo card type === Chase
     card = 'Chase'
   }
 

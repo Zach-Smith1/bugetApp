@@ -266,9 +266,6 @@ button:hover {
 }
 .table {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
   overflow-y: scroll;
   margin: 1%;
   max-width: fit-content;
@@ -276,5 +273,24 @@ button:hover {
   border-width: 5px;
   border-style: double;
   border-color: black;
+  border-collapse: collapse;
+  border-spacing: 0;
   padding: 1%;
+  table-layout: fixed;
 }
+/* th {
+  background-color: #989898;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+tbody {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+tr {
+  border-collapse: collapse;
+  border-spacing: 0;
+} */
