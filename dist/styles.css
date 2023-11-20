@@ -62,16 +62,19 @@ button:hover {
   align-items: flex-start;
   grid-row: 4;
   grid-column: 2;
-  min-height: 5vh;
+  min-height: 16vh;
   margin-top: 1vh;
   padding-top: 15vh;
 }
+
 .downloadButton {
   display: flex;
+  justify-self: center;
   justify-content: center;
   align-items: center;
   grid-row: 4;
   grid-column: 3;
+  width: 50%;
 }
 .donut {
   grid-row: 2;
@@ -130,41 +133,6 @@ button:hover {
   top: 1px;
   width: 100vw;
   height: 100vh;
-}
-@media screen and (max-width: 800px) {
-  button {
-    width: 100px;
-  }
-  .grid {
-    display: flex; /* Switch to Flexbox on mobile */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center;
-  }
-  .drag-drop-input {
-    padding: 15%;
-  }
-  .donut {
-    width: 90%;
-  }
-  .myDonut {
-    width: 100%;
-  }
-  .inputButton {
-    height: 200%;
-    width: 100%;
-    opacity: 0;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 1;
-  }
-  .table {
-    min-height: 20vh;
-    max-height: 50%;
-  }
-  .sorter {
-    align-self: center;
-  }
 }
 .inputButton {
   height: 100%;
@@ -286,24 +254,45 @@ button:hover {
   display: flex;
   grid-row: 3;
   grid-column: 1;
-  align-self: self-end;
+  align-self: end;
   align-items: baseline;
   font-size: large;
   justify-self: center;
 }
-/* th {
-  background-color: #989898;
-  position: sticky;
-  top: 0px;
-  z-index: 1;
-  border-collapse: collapse;
-  border-spacing: 0;
+@media screen and (max-width: 800px) {
+  button {
+    width: 100px;
+  }
+  .grid {
+    display: flex; /* Switch to Flexbox on mobile */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
+  }
+  .drag-drop-input {
+    padding: 15%;
+  }
+  .donut {
+    width: 90%;
+  }
+  .myDonut {
+    width: 100%;
+  }
+  .inputButton {
+    height: 200%;
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+  }
+  .tableBox {
+    max-height: 50%;
+  }
+  .table {
+    min-height: 20vh;
+  }
+  .sorter {
+    align-self: center;
+  }
 }
-tbody {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-tr {
-  border-collapse: collapse;
-  border-spacing: 0;
-} */

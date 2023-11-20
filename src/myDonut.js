@@ -116,7 +116,7 @@ const MyDonut = ({ totals, income, housing, change, legend }) => {
   },
     labels: labels,
     title: {
-      text: 'My Spending',
+      text: 'Your Spending',
       align: 'center'
     }
   }
