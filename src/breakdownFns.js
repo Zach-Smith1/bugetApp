@@ -102,7 +102,7 @@ export function getSpendingTotals(file, category) {
   return ["Category, $ Spent\n" + finalCsv, totals]
 }
 
-export function fineGrainedBreakdown(file) {
+export function fineGrainedBreakdown(file, sort) {
   console.log(`fineGrainedBreakdown is parsing payments...`);
   let allRows = file.split('\n')
   if (allRows[0].split(',').length < 3) {
@@ -149,12 +149,12 @@ export function fineGrainedBreakdown(file) {
   // below code is to add the totals to a final output in alphabetical order
   let breakdown = [];
   for (let key in totals) {
-    let newRow = `${key}, ${Number(totals[key].toFixed(2))}\n`;
-    breakdown.push(newRow);
+    breakdown.push(`${key}, ${Number(totals[key].toFixed(2))}\n`);
   }
   breakdown.sort((a, b) => {
-    const nameA = a.toUpperCase(); // ignore upper and lowercase
-    const nameB = b.toUpperCase(); // ignore upper and lowercase
+    const nameA = sort === '$' ? Number(b.split(',')[1]) : a.toUpperCase();
+    const nameB = sort === '$' ? Number(a.split(',')[1]) : b.toUpperCase();
+
     if (nameA < nameB) {
       return -1;
     }
@@ -163,6 +163,7 @@ export function fineGrainedBreakdown(file) {
     }
     return 0;
   });
+  console.log('sorting...')
   return "Establishment, $ Spent\n" + breakdown.join('')
 }
 

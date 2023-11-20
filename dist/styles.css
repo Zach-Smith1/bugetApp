@@ -278,6 +278,15 @@ button:hover {
   padding: 1%;
   table-layout: fixed;
 }
+.sorter {
+  display: flex;
+  grid-row: 3;
+  grid-column: 1;
+  align-self: self-end;
+  align-items: baseline;
+  font-size: large;
+  justify-self: center;
+}
 /* th {
   background-color: #989898;
   position: sticky;

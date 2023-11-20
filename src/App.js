@@ -23,6 +23,8 @@ class App extends React.Component {
       dragging: false,
       show: 'none',
       series: [1, 2, 3, 0, 5, 6, 7, 8],
+      showSort: false,
+      sort: 'A-Z',
       income: 0,
       housing: 0,
       savings: 0,
@@ -188,7 +190,8 @@ class App extends React.Component {
       if (this.state.category !== null) { // prevents crash when changing base file (which changes category back to null)
         let totals = getSpendingTotals(this.state.file, this.state.category);
         this.setState({
-          download: totals
+          download: totals,
+          showSort: false
         })
         console.log('category change')
       }
@@ -375,7 +378,8 @@ class App extends React.Component {
     if (totals) {
       this.setState({
         download: totals,
-        show: 'none'
+        show: 'none',
+        showSort: true
       })
     }
   }
@@ -480,6 +484,15 @@ class App extends React.Component {
     }
   }
 
+  sortChange = () => {
+    let val = this.state.sort === '$' ? 'A-Z' : '$'
+    let totals = fineGrainedBreakdown(getSpendingTotals(this.state.file, this.state.category), val)
+    this.setState({
+      sort: val,
+      download: totals
+    })
+  }
+
   render() {
     let inputMessage;
     if (window.screen.width < 768) {
@@ -488,7 +501,7 @@ class App extends React.Component {
       inputMessage = <><strong>Drag and Drop Credit Card Transaction History</strong><br/> or click to browse</>
     }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
-    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle, toolsPlaceholder] = Array(12).fill(null);
+    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle, toolsPlaceholder, sorter] = Array(13).fill(null);
     let list = Object.keys(this.state.object);
       let all = [<option key='base' value=''>Select Category</option>];
       list.forEach((cat) => {
@@ -542,6 +555,11 @@ class App extends React.Component {
       showAll = <button className='basic' onClick={this.showTotal}>Overview</button>
       edit = <button className='basic' id='editButton' onClick={this.edit}>Edit Table</button>
     }
+    if (this.state.showSort) {
+      sorter = <span className='sorter'>Sorted By &thinsp;
+        <button className='basic' onClick={this.sortChange}>{this.state.sort}</button>
+      </span>
+    }
 
     return (
       <div className='grid'>
@@ -566,6 +584,7 @@ class App extends React.Component {
           <span>{showAll}{totals}{edit}</span>
         </div>
         {toolsPlaceholder}
+        {sorter}
         <div className='tableBox'>{table}</div>
         <div className='downloadButton'>{downloadButton}</div>
         <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>
