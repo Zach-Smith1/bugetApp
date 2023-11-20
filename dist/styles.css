@@ -160,6 +160,10 @@ button:hover {
   }
   .table {
     min-height: 20vh;
+    max-height: 50%;
+  }
+  .sorter {
+    align-self: center;
   }
 }
 .inputButton {

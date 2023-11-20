@@ -514,12 +514,12 @@ class App extends React.Component {
         <input className='nameInput' name='name' type='text' placeholder='a' value={this.state.name} onChange={this.inputChange}/>
       </div>
       income = <div>
-        <input className='incomeInput' name='income' type='number' placeholder='$' onChange={this.inputChange}/>
-        <label id='incomeLabel' htmlFor='income'>&emsp;Add Income to Calculate Savings</label>
+        <input className='incomeInput' name='income' type='number' placeholder='Add Income' onChange={this.inputChange}/>
+        <label id='incomeLabel' htmlFor='income'>&emsp;Calculate Savings</label>
         </div>
       housing = <div>
-        <input className='housingInput' name='housing' type='number' placeholder='$' onChange={this.inputChange}/>
-        <label id='housingLabel' htmlFor='housing'>&emsp;Add Housing Cost</label>
+        <input className='housingInput' name='housing' type='number' placeholder='Add Housing' onChange={this.inputChange}/>
+        <label id='housingLabel' htmlFor='housing'>&emsp;Rent/ Mortgage</label>
       </div>
     }
     if (this.state.download) {
