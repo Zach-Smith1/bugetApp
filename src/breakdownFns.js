@@ -69,10 +69,10 @@ export function getSpendingTotals(file, category) {
       }
       if (category && rowArr[i] === category) {
         if (head === true) {
-          finalCsv = "Transaction Date,Description,Charge,Category\n";
+          finalCsv = "Transaction Date,Description,Charge\n"; // removed: ,Category
           head = false
         }
-        finalCsv += `${rowArr[dateCol]},${rowArr[desCol]},${number},${rowArr[catCol]}\n`;
+        finalCsv += `${rowArr[dateCol]},${rowArr[desCol]},${number}\n`; // removed: ,${rowArr[catCol]}
       }
       rowObj[columnNames[i]] = rowArr[i];
     }

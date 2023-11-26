@@ -152,10 +152,17 @@ class App extends React.Component {
   }
   editOff = () => {
     document.getElementById('altButton').id = 'editButton';
-    let rows = document.getElementsByClassName('rows');
+    let rows = Array.from(document.getElementsByClassName('rows'));
+    let clicked = document.getElementsByClassName('clicked');
+    if (clicked.length > 0) {
+      for (let i = 0; i < clicked.length; i ++) {
+        rows.push(clicked[i])
+      }
+    }
     for (let i = 0; i < rows.length; i++) {
       rows[i].removeEventListener('click', this.openModal);
-      rows[i].id = 'none'
+      rows[i].id = 'none';
+      rows[i].className = 'rows';
     }
   }
   cancelEdit = () => {
@@ -501,7 +508,7 @@ class App extends React.Component {
       inputMessage = <><strong>Drag and Drop Credit Card Transaction History</strong><br/> or click to browse</>
     }
     // declare variable equal to null that will appear as elements once the requisite data is stored in state
-    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle, toolsPlaceholder, sorter] = Array(13).fill(null);
+    let [name, totals, downloadButton, table, baseGraph, myGraph, income, housing, showAll, edit, toggle, toolsPlaceholder, sorter, category] = Array(14).fill(null);
     let list = Object.keys(this.state.object);
       let all = [<option key='base' value=''>Select Category</option>];
       list.forEach((cat) => {
@@ -545,18 +552,17 @@ class App extends React.Component {
       // download button = button to download the table displayed on screen as a csv file to local device
       downloadButton = <button className='special' onClick={this.handleDownloadCSV}>Download Table</button>
       // Assuming this.state.download contains the CSV string
-      table = <div className='table' id='table'>
-        <Table className="tableDiv" csv={this.state.download}/>
-        </div>
+      table = <Table csv={this.state.download} category={this.state.category}/>
     }
     if (this.state.category) {
       // totals = button that shows all transactions from imported csv file aggregated by type/ category
-      totals = <button className='basic' onClick={this.getFineGrained}>Group by Vendor</button>
+      totals = <button className='basic' onClick={this.getFineGrained}>Group & Sort</button>
       showAll = <button className='basic' onClick={this.showTotal}>Overview</button>
       edit = <button className='basic' id='editButton' onClick={this.edit}>Edit Table</button>
+      category = <span><strong>{this.state.category}</strong></span>
     }
     if (this.state.showSort) {
-      sorter = <span className='sorter'>Sorted By &thinsp;
+      sorter = <span>Sorted By &thinsp;
         <button className='basic' onClick={this.sortChange}>{this.state.sort}</button>
       </span>
     }
@@ -584,7 +590,10 @@ class App extends React.Component {
           <span>{showAll}{totals}{edit}</span>
         </div>
         {toolsPlaceholder}
-        {sorter}
+        <div className='sorter'>
+          {sorter}
+          {category}
+        </div>
         <div className='tableBox'>{table}</div>
         <div className='downloadButton'>{downloadButton}</div>
         <Modal isOpen={this.state.isModalOpen} closeModal={this.cancelEdit}>

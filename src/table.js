@@ -31,24 +31,41 @@ class Table extends React.Component {
     });
   };
 
+  formattedNumber = (num) => {
+    return num !== undefined && !isNaN(num) ? Number(num).toLocaleString('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 3,
+    }) : ' No Data Found '
+  };
+
+  cellMapper = (c, i) => {
+    if (!isNaN(Number(c))) {
+      return <td key={i} style={{'textAlign':'right'}}>{this.formattedNumber(c)}&thinsp;</td>
+    } else {
+      return <td key={i} style={{'textAlign':'left'}}>&thinsp;{c}</td>
+    }
+  }
+
+
   render() {
     const { tableData } = this.state;
 
     return (
       <table>
         <thead>
-
+          <tr>
             {tableData.length > 0 &&
               Object.keys(tableData[0]).map((column) => (
                 <th key={column}>{column}</th>
               ))}
-
+          </tr>
         </thead>
         <tbody>
           {tableData.map((row, rowIndex) => (
-            <tr key={rowIndex} className='rows'>
+              <tr key={rowIndex} className='rows'>
               {Object.values(row).map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
+                this.cellMapper(cell, cellIndex)
               ))}
             </tr>
           ))}
