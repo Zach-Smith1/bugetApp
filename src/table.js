@@ -41,9 +41,9 @@ class Table extends React.Component {
 
   cellMapper = (c, i) => {
     if (!isNaN(Number(c))) {
-      return <td key={i} style={{'textAlign':'right'}}>{this.formattedNumber(c)}&thinsp;</td>
+      return <td key={i} style={{'textAlign':'right'}}>{this.formattedNumber(c)}</td>
     } else {
-      return <td key={i} style={{'textAlign':'left'}}>&thinsp;{c}</td>
+      return <td key={i} style={{'textAlign':'left'}}>{c}</td>
     }
   }
 

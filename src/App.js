@@ -56,11 +56,15 @@ class App extends React.Component {
       alert('No Category Selected');
     }
     this.closeModal();
-    let nodes = this.state.clicked;
-    let first = nodes[0].innerHTML;
-    let category = nodes[3].innerHTML;
-    let amount = nodes[2].innerHTML;
-    let totals = { ...this.state.object };
+    this.edit();
+    const nodes = this.state.clicked;
+    const first = nodes[0].innerHTML;
+    const description = nodes[1].innerHTML;
+    const amount = Number(nodes[2].innerHTML);
+    const category = this.state.category;
+    const totals = { ...this.state.object };
+    totals[category] -= amount;
+    let download = this.state.download;
     totals[category] -= amount;
     let files = this.state.file.split('\n')
     let row = 0;
@@ -76,20 +80,21 @@ class App extends React.Component {
         if (col[catCol] == category || col[catCol].split('-')[0] == category /* split for shortened amex names*/) {
           if (col[numCol] == amount || col[numCol + 1] == amount * -1 || col[numCol] == amount * -1) {
             found = true
-            nodes.forEach((n) => n.innerHTML = '')
-            console.log('category',this.state.rowCategory)
-            console.log('row before', files[row][catCol])
+            let foundRow = `${first},${description},${amount}`
+            download = download.split('\n');
+            download.splice(download.indexOf(foundRow),1);
+            download = download.join('\n');
             files[row] = files[row].split(',')
             files[row][catCol] = this.state.rowCategory
             files[row] = files[row].join(',')
-            console.log('row after',files[row][catCol])
           }
         }
       }
     }
     files = files.join('\n');
     this.setState({
-      file: files
+      file: files,
+      download: download
     })
     this.edit();
     this.closeInnerModal();
@@ -98,13 +103,16 @@ class App extends React.Component {
   removeRow = (e) => {
     e.preventDefault();
     this.closeModal();
-    let nodes = this.state.clicked;
-    let first = nodes[0].innerHTML;
-    let category = nodes[3].innerHTML;
-    let amount = nodes[2].innerHTML;
-    let totals = { ...this.state.object };
+    this.edit();
+    const nodes = this.state.clicked;
+    const first = nodes[0].innerHTML;
+    const description = nodes[1].innerHTML;
+    const amount = Number(nodes[2].innerHTML);
+    const category = this.state.category;
+    const totals = { ...this.state.object };
     totals[category] -= amount;
-    let files = this.state.file.split('\n')
+    const files = this.state.file.split('\n')
+    let download = this.state.download;
     let row = 0;
     while (!files[row].includes('Description') && !files[row].includes('"Description"')) {
       row++
@@ -118,15 +126,19 @@ class App extends React.Component {
         if (col[catCol] == category || col[catCol].split('-')[0] == category /* split for shortened amex names*/) {
           if (col[numCol] == amount || col[numCol + 1] == amount * -1 || col[numCol] == amount * -1) {
             found = true
-            nodes.forEach((n) => n.innerHTML = '')
+            let foundRow = `${first},${description},${amount}`
+            download = download.split('\n');
+            download.splice(download.indexOf(foundRow),1);
+            download = download.join('\n');
             files.splice(row, 1)
           }
         }
       }
     }
-    files = files.join('\n');
+    let newFiles = files.join('\n');
     this.setState({
-      file: files
+      file: newFiles,
+      download: download
     })
     this.edit();
   }
