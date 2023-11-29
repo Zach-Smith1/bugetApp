@@ -388,6 +388,7 @@ class App extends React.Component {
     let totals = getSpendingTotals(this.state.file);
     this.setState({
       download: totals[0],
+      category: null,
       show: 'none'
     })
   }
@@ -488,11 +489,11 @@ class App extends React.Component {
   }
 
   handleResize = () => {
-    const minWidthForAction = 1080;
+    const minWidthForAction = 1200;
     const width = window.innerWidth;
     // const height = window.innerHeight;
 
-    if (width < minWidthForAction && width > 800) {
+    if (width < minWidthForAction && width > 933) {
       this.setState({
         legend: false
       })
@@ -555,9 +556,7 @@ class App extends React.Component {
         toggleName = 'Basic'
       }
       toggle = <div id='toggle'><button className='basic' onClick={this.versionChange}>{toggleName}</button></div>
-      baseGraph = <div className='donut'>
-      <Donut version={this.state.version} legend={this.state.legend}/>
-      </div>
+      baseGraph = <Donut version={this.state.version} legend={this.state.legend}/>
       myGraph = <div className='myDonut'>
         <MyDonut totals={this.state.object} series={this.state.series} income={this.state.income} housing={this.state.housing} key={this.state.series.join('_')} change={this.addCategory} legend={this.state.legend}/></div>
 
@@ -595,8 +594,8 @@ class App extends React.Component {
         <div className='name'>{name}</div>
         {toggle}
         {baseGraph}
-        {myGraph}
         <div className='custom'>{income}{housing}</div>
+        {myGraph}
         {/* <div className='category'></div> */}
         <div className='totals' style={{ display: this.state.show }}>Table Tools<br/>
           <span>{showAll}{totals}{edit}</span>
